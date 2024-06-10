@@ -1,0 +1,47 @@
+:root
+{
+    --bs-border-radius: 15px
+}
+
+body{
+    background-color: #f0f0ec;
+}
+button {
+    transition: transform .3s
+}
+button:hover{
+    transform: scale(1.1);
+}
+a.btn {
+    transition: transform .3s
+}
+a.btn:hover{
+    transform: scale(1.1);
+}
+button.unheart{
+    color: red;
+}
+button.unheart:hover{
+    color: white;
+}
+button.heart{
+    color: white;
+}
+button.heart:hover{
+    color: red;
+}
+.styled-block-1{
+    border-radius: 15px;
+    background: #fff;
+    width: 100%;
+    text-align: center;
+}
+.flex-block{
+    background-color: #f0f0ec;
+    height: 100%;
+    display:flex;
+    flex-direction:row;
+}
+.center-text{
+    text-align: center;
+}
