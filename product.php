@@ -41,54 +41,43 @@ if(is_numeric($product_id)) {
     <?php
     if($find)
     {
+        $image = '';
+
         $price = $product['product_price'];
         $old_price = $product['product_old_price'];
         $photo = $product['product_photo'];
-        echo '<div class="container-md d-inline styled-block-2">
-                <div class="C-carousel styled-block-2">';
+
         $photos = explode(',', $photo);
         if (count($photos) >= 1) {
             foreach($photos as $photo) {
                 if (!is_file('photos/'.$photo)) continue;
-                echo '<img src="photos/'.$photo.'" class="C-slide img-thumbnail" style="max-height: 600px; max-width: 600px; object-fit: cover; border-radius: 15px" alt="">';
+                $image .= '<img src="photos/'.$photo.'" class="C-slide img-thumbnail" style="max-height: 600px; max-width: 600px; object-fit: cover; border-radius: 15px" alt="">';
             }
         }else{
-            echo '<img src="photos/no-img.jpg" class="C-slide img-thumbnail gallery-image" alt="">';
+            $image = '<img src="photos/no-img.jpg" class="C-slide img-thumbnail gallery-image" alt="">';
         }
-        echo '</div>';
 
-        echo '</div>';
         $feedbacks = 0;
         $feedback_rate = ($feedbacks > 0 ? 5 / $feedbacks : 0);
         if ($feedback_rate >= 4) {
-            $feedback_text = '<h6 style="color:#858983;">
-                                <i class="bi bi-star-fill star-class"></i>
-                                <t class="star-class">'.$feedback_rate.'</t> · '.$feedbacks.' отзывов · 
-                                <i class="bi bi-truck"></i> '.$product['product_sales'].' покупок
-                              </h6>';
+            $star_classes = 'bi bi-star-fill star-class';
+            $star_text_classes = 'star-class';
         }elseif($feedback_rate >= 3 && $feedback_rate <= 3.9){
-            $feedback_text = '<h6 style="color:#858983;">
-                                <i class="bi bi-star-half star-class"></i>
-                                <t class="star-class">'.$feedback_rate.'</t> · '.$feedbacks.' отзывов · 
-                                <i class="bi bi-truck"></i> '.$product['product_sales'].' покупок
-                              </h6>';
+            $star_classes = 'bi bi-star-half star-class';
+            $star_text_classes = 'star-class';
         }else{
-            $feedback_text = '<h6 style="color:#858983;">
-                                <i class="bi bi-star-fill star-class-bad"></i>
-                                '.$feedback_rate.' · '.$feedbacks.' отзывов · 
-                                <i class="bi bi-truck"></i> '.$product['product_sales'].' покупок
-                              </h6>';
+            $star_classes = 'bi bi-star-fill star-class-bad';
+            $star_text_classes = '';
         }
-        echo '<div class="container-md d-inline p-2 styled-block-1"><h1 >'.$name.'</h1>
-              '.$feedback_text.'
-              <p style="font-size: 20px">'.$product['product_description'].'</p>  </div>';
+
         $format_price = number_format($price, 2, ',', ' ');
         $amount = $product['product_amount'];
+
         if ($amount > 0) {
             $amount_text = '<div class="center-text text-delivery"></div>';
-            if ($acc_id !== false)
+            if ($acc_id)
             {
-                if ((new PersonalDB('src/php/database/Personal_DB.db'))->cart_exists_product($acc_id, $product_id))
+                if (!(new PersonalDB('src/php/database/Personal_DB.db'))->cart_exists_product($acc_id, $product_id))
                 {
                     $buy_button = '<button type="button" onclick="add_to_cart('.$acc_id.', '.$product_id.', this)" style="background: #0d6efd" class="btn btn-primary buy-button">Добавить в корзину</button>
                            <div class="text-delivery"> В наличии <b>'.$amount.' штук</b>. Доставим <b>завтра</b></div>';
@@ -97,7 +86,7 @@ if(is_numeric($product_id)) {
                            <div class="text-delivery"> В наличии <b>'.$amount.' штук</b>. Доставим <b>завтра</b></div>';
                 }
             }else{
-                $buy_button = '<button type="button" class="btn btn-primary buy-button">Добавить в корзину</button>
+                $buy_button = '<button type="button" id="personal-btn" aria-current="page" data-bs-toggle="modal" data-bs-target="#authModal" class="btn btn-primary buy-button">Добавить в корзину</button>
                            <div class="text-delivery"> В наличии <b>'.$amount.' штук</b>. Доставим <b>завтра</b></div>';
             }
             $buy_one_click_button = '<button type="button" class="btn btn-info buy-one-click-button">Купить в один клик</button>';
@@ -106,6 +95,7 @@ if(is_numeric($product_id)) {
             $buy_button = '<button type="button" class="btn btn-primary buy-button disabled">Товар закончился</button>';
             $buy_one_click_button = '';
         }
+
         if($old_price !== 0){
             $discount = round((($old_price - $price) / $old_price) * 100);
             $discount_text = $discount >= 1 ? '<t style="color: red; font-weight: bolder">-'.$discount.'%</t>' : null;
@@ -115,23 +105,44 @@ if(is_numeric($product_id)) {
             }else{
                 $change_text = '<i class="bi bi-graph-down-arrow" style="color: #00bb0e;"></i> Цена понизилась';
             }
-            echo '<div class="container-md p-2 styled-block-1">
-              <div class="price-block">'.$format_price.' ₽</div>
-              <div class="center-text">новая цена</div><br>
-              <div class="old-price-block m-2">'.$format_old_price.' ₽</div>
-              <div class="center-text">старая цена '.$discount_text.'</div><br>
-              <div class="center-text">'.$change_text.'</div><br>
-              '.$amount_text.'
-              '.$buy_button.'
-              <br>
-              '.$buy_one_click_button.'
-              </div>';
+            $change_text = '<div class="center-text">новая цена</div><br>
+                            <div class="old-price-block m-2">'.$format_old_price.' ₽</div>
+                            <div class="center-text">старая цена '.$discount_text.'</div><br>
+                            <div class="center-text">'.$change_text.'</div><br>';
         }else{
-            echo '<div class="container-md p-2 styled-block-1">
-              <div class="price-block">'.$format_price.' ₽</div>
-              <div class="center-text">цена ещё не менялась</div><br>';
+            $change_text = '<div class="center-text">цена ещё не менялась</div><br>';
         }
 
+        echo str_replace(array(
+                '%image%',
+                '%product_name%',
+                '%star_classes%',
+                '%star_text_classes%',
+                '%feedback_rate%',
+                '%feedbacks%',
+                '%product_sales%',
+                '%product_description%',
+                '%format_price%',
+                '%change_price%',
+                '%amount_text%',
+                '%buy_button%',
+                '%buy_one_click_button%'
+        ), array(
+              $image,
+              $product['product_name'],
+              $star_classes,
+              $star_text_classes,
+              $feedback_rate,
+              $feedbacks,
+              $product['product_sales'],
+              $product['product_description'],
+              $format_price,
+              $change_text,
+              $amount_text,
+              $buy_button,
+              $buy_one_click_button
+        ),
+        $formatter->getTemplate('product'));
     }else{
         echo '<h1>К сожалению, ничего не нашлось ;(</h1>';
     }

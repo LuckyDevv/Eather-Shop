@@ -21,16 +21,22 @@ $acc_id = $formatter->get_cookie_acc_id($_COOKIE);
     <title>EATHER - интернет-магазин</title>
 </head>
 <body>
-<?php echo $formatter->get_header(); ?>
-<div class="container-fluid" style="background-color: #f0f0ec">
-    <br>
-    <?php echo $formatter->get_products($_COOKIE, 'Лидеры продаж!', $top_products, 5); ?>
-</div>
-<br>
-<div class="container-fluid" style="background-color: #f0f0ec">
-    <?php echo $formatter->get_products($_COOKIE, 'Новинки на рынке!', $new_products, 5); ?>
-</div>
-<br>
+<?php echo $formatter->get_header();
+    $top_products = $formatter->get_products($_COOKIE, 'Лидеры продаж!', $top_products, 5);
+    $new_products = $formatter->get_products($_COOKIE, 'Новинки на рынке!', $new_products, 5);
+    if ($top_products !== '</div>') {
+        echo '<div class="container-fluid" style="background-color: #f0f0ec">
+                <br>'.$top_products.'
+              </div>
+              ';
+    }
+    if ($new_products !== '</div>') {
+        echo '<div class="container-fluid" style="background-color: #f0f0ec">
+                <br>'.$new_products.'
+              </div>
+              <br>';
+}
+?>
 <script src="src/js/jquery.min.js"></script>
 <script src="src/js/index.js"></script>
 <?php

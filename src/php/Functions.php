@@ -46,6 +46,7 @@ class Functions
 
     public function get_discount_text(int $price, int $old_price): string
     {
+        if ($old_price == 0) return '';
         $discount = round((($old_price - $price) / $old_price) * 100);
         if ($discount >= 1) {
             $format_old_price = number_format($old_price, 2, ',', ' ');
@@ -132,15 +133,15 @@ class Functions
                             '%heart_button%',
                             '%cart_button%',
                             '%link_button%'),
-                        array(
-                            'photos/'.$photo,
-                            '<t style="color: #00bb0e; font-weight: 800">'.$format_price.' ₽</t>'.$this->get_discount_text($price, $product_['product_old_price']),
-                            $name,
-                            $this->get_heart_button($acc_id, $product_['product_id']),
-                            $this->get_cart_button($acc_id, $product_['product_id']),
-                            $this->get_link_button($product_['product_id'])
-                        ),
-                        $this->getTemplate('products'));
+                            array(
+                                'photos/'.$photo,
+                                '<t style="color: #00bb0e; font-weight: 800">'.$format_price.' ₽</t>'.$this->get_discount_text($price, $product_['product_old_price']),
+                                $name,
+                                $this->get_heart_button($acc_id, $product_['product_id']),
+                                $this->get_cart_button($acc_id, $product_['product_id']),
+                                $this->get_link_button($product_['product_id'])
+                            ),
+                            $this->getTemplate('products'));
                         $count++;
                     }
                 }else break;
@@ -149,8 +150,8 @@ class Functions
             {
                 $returnText .= '<div class="styled-block-1 p-2"><h3 class="align-content-center">'.$title.'</h3>
                                     <div class="row row-cols-auto row-cols-md-auto p-3 justify-content-center">'
-                                        .$content.
-                                    '</div>
+                    .$content.
+                    '</div>
                                 </div>';
                 if (count($products) >= $count && $notLoadMessage !== '') $returnText .= '<h5 style="center-text">Некоторые товары не удалось загрузить</h5>';
             }else $returnText .= $returnIfNull ? '<div class="row row-cols-auto row-cols-md-auto p-3 justify-content-center">
@@ -224,7 +225,7 @@ class Functions
         $returnText .= '</div>';
         return $returnText;
     }
-    private function getTemplate(string $name): false|string
+    public function getTemplate(string $name): false|string
     {
         ob_start();
         include('tpl/'.$name.".tpl");
