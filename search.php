@@ -3,8 +3,8 @@ require 'src/php/ProductsDB.php';
 require 'src/php/ConfigController.php';
 require 'src/php/AccountsDB.php';
 require 'src/php/PersonalDB.php';
-require 'src/php/Formatter.php';
-$formatter = new Formatter();
+require 'src/php/Functions.php';
+$formatter = new Functions();
 $find_name = $_GET['find_name'] ?? false;
 $acc_id = $formatter->get_cookie_acc_id($_COOKIE);
 ?>

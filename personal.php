@@ -3,8 +3,8 @@ require 'src/php/AccountsDB.php';
 require 'src/php/ConfigController.php';
 require 'src/php/PersonalDB.php';
 require 'src/php/ProductsDB.php';
-require 'src/php/Formatter.php';
-$formatter = new Formatter();
+require 'src/php/Functions.php';
+$formatter = new Functions();
 if(!$formatter->get_cookie_auth($_COOKIE)) header('Location: index.php?toast=no_auth');
 ?>
 <!DOCTYPE html>
