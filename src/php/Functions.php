@@ -129,7 +129,7 @@ class Functions
                             '%photo%',
                             '%price%',
                             '%name%',
-                            '%%heart_button%',
+                            '%heart_button%',
                             '%cart_button%',
                             '%link_button%'),
                         array(
@@ -199,7 +199,7 @@ class Functions
                                 '%photo%',
                                 '%price%',
                                 '%name%',
-                                '%%heart_button%',
+                                '%heart_button%',
                                 '%cart_button%',
                                 '%link_button%'),
                                 array(
@@ -217,9 +217,8 @@ class Functions
                     if ($count_products >= 1) {
                         $returnText .= '<div class="row row-cols-auto row-cols-md-auto p-3 justify-content-center">'.$content.'</div>';
                         if (count($products) !== $count_products) $returnText .= '<h5 style="center-text">Некоторые товары не удалось загрузить</h5>';
-                        else $returnText .= '<br><h4 style="center-text">Пока что тут пусто :(</h4>';
                     } else $returnText .= '<br><h4 style="center-text">Пока что тут пусто :(</h4>';
-                }
+                } else $returnText .= '<br><h4 style="center-text">Пока что тут пусто :(</h4>';
             }
         }
         $returnText .= '</div>';
