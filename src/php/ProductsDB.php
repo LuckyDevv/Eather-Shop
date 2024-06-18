@@ -20,10 +20,13 @@ class ProductsDB
                 foreach ($fetched as $key => $value) {
                     if (str_contains(mb_strtolower($value['product_name'], 'UTF-8'), $required_name)
                         or str_contains(mb_strtolower($value['product_description'], 'UTF-8'), $required_name)) {
+                        file_put_contents('src/php/dev_log/log.txt', $required_name.' успешно '.$value['product_name']);
                         if(!isset($result[$value['product_id']]))
                         {
                             $result[$value['product_id']] = $value['product_id'];
                         }
+                    }else{
+                        unset($fetched[$key]);
                     }
                 }
                 if(count($fetched) >= 1) return $fetched;

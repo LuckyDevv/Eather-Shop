@@ -15,7 +15,16 @@ html, body {
   position: relative;
   border-radius: 15px
 }
-
+@media  (max-width: 1650px) {
+  .C-carousel {
+    background: #212121;
+    height: 42vh;
+    width: 42vh;
+    overflow: hidden;
+    position: relative;
+    border-radius: 15px
+  }
+}
 .C-track {
   opacity: 1;
   transition: all 400ms ease;

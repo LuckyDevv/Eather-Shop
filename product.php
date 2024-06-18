@@ -8,7 +8,7 @@ $formatter = new Functions();
 $products_db = new ProductsDB('src/php/database/Products_DB.db');
 $product_id = $_GET['product_id'] ?? null;
 $find = false;
-$acc_id = $formatter->get_cookie_acc_id($_COOKIE);
+$acc_id = $formatter->get_cookie_acc_id($_COOKIE, $_SERVER['REMOTE_ADDR']);
 if(is_numeric($product_id)) {
     $product = $products_db->product_find_by_id((int) $product_id);
     if($product !== false) {
@@ -21,6 +21,7 @@ if(is_numeric($product_id)) {
 <html lang="ru">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="src/css/bootstrap.css" rel="stylesheet">
     <link href="src/icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="src/css/product.css" rel="stylesheet">
@@ -37,7 +38,8 @@ if(is_numeric($product_id)) {
 </head>
 <body>
 <?php echo $formatter->get_header(); ?>
-<div class="container-fluid p-2 flex-block">
+<div class="container-fluid p-2 m-2">
+    <div class="row p-1 justify-content-center">
     <?php
     if($find)
     {
@@ -51,7 +53,7 @@ if(is_numeric($product_id)) {
         if (count($photos) >= 1) {
             foreach($photos as $photo) {
                 if (!is_file('photos/'.$photo)) continue;
-                $image .= '<img src="photos/'.$photo.'" class="C-slide img-thumbnail" style="max-height: 600px; max-width: 600px; object-fit: cover; border-radius: 15px" alt="">';
+                $image .= '<img src="photos/'.$photo.'" class="C-slide img-thumbnail img-my-drop" alt="">';
             }
         }else{
             $image = '<img src="photos/no-img.jpg" class="C-slide img-thumbnail gallery-image" alt="">';
@@ -82,7 +84,7 @@ if(is_numeric($product_id)) {
                     $buy_button = '<button type="button" onclick="add_to_cart('.$acc_id.', '.$product_id.', this)" style="background: #0d6efd" class="btn btn-primary buy-button">Добавить в корзину</button>
                            <div class="text-delivery"> В наличии <b>'.$amount.' штук</b>. Доставим <b>завтра</b></div>';
                 }else{
-                    $buy_button = '<button type="button" onclick="del_from_cart('.$acc_id.', '.$product_id.', this)" style="background: #00bb0e" class="btn btn-primary buy-button">Удалить из корзины</button>
+                    $buy_button = '<button type="button" onclick="del_from_cart('.$acc_id.', '.$product_id.', this)" style="background: #00bb0e; border: 1px solid #00bb0e;" class="btn btn-primary buy-button">Удалить из корзины</button>
                            <div class="text-delivery"> В наличии <b>'.$amount.' штук</b>. Доставим <b>завтра</b></div>';
                 }
             }else{
@@ -147,6 +149,7 @@ if(is_numeric($product_id)) {
         echo '<h1>К сожалению, ничего не нашлось ;(</h1>';
     }
     ?>
+    </div>
 </div>
 
 <script src="src/js/jquery.min.js"></script>

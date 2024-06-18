@@ -9,7 +9,7 @@ class Functions
     }
     public function get_cart_button(int $acc_id, int $product_id): string
     {
-        $request = (new PersonalDB('src/php/database/Personal_DB.db'))->cart_exists_product($acc_id, $product_id);;
+        $request = (new PersonalDB('src/php/database/Personal_DB.db'))->cart_exists_product($acc_id, $product_id);
         if ($request) {
             $cart_button = '<button id="delete-cart_'.$product_id.'" class="btn" onclick="deleteCart('.$acc_id.', '.$product_id.', this)" data-bs-toggle="tooltip" title="Удалить из корзину">
                         <h4><i class="bi bi-cart-x-fill" style="color: #23d214; -webkit-text-stroke: 1px #000000"></i></h4>
@@ -24,7 +24,7 @@ class Functions
 
     public function get_heart_button(int $acc_id, int $product_id): string
     {
-        $request = (new PersonalDB('src/php/database/Personal_DB.db'))->favorites_exists_product($acc_id, $product_id);;
+        $request = (new PersonalDB('src/php/database/Personal_DB.db'))->favorites_exists_product($acc_id, $product_id);
         if ($request) {
             $heart_button = '<button id="delete_'.$product_id.'" class="btn unheart" onclick="deleteFavorite('.$acc_id.', '.$product_id.', this)" data-bs-toggle="tooltip" title="Удалить из избранного">
                          <h4><i class="bi bi-heart-fill" style="-webkit-text-stroke: 2px #000000;"></i></h4>
@@ -61,28 +61,40 @@ class Functions
         $acc_id = false;
         if (isset($cookie['sess_id']))
         {
-            $this->session_config = new ConfigController('src/php/sessions/' . $cookie['sess_id'] . '.json', ConfigController::JSON);
-            $login = $this->session_config->exists('login') ? $this->session_config->get('login') : false;
-            if ($login !== false)
+            if (file_exists('src/php/sessions/' . $cookie['sess_id'] . '.json'))
             {
-                $acc_id = (new AccountsDB('src/php/database/AccountsDB.db'))->account_get_by_login($login);
+                $this->session_config = new ConfigController('src/php/sessions/' . $cookie['sess_id'] . '.json', ConfigController::JSON);
+                $login = $this->session_config->exists('login') ? $this->session_config->get('login') : false;
+                if ($login !== false)
+                {
+                    $acc_id = (new AccountsDB('src/php/database/AccountsDB.db'))->account_get_by_login($login);
+                }else{
+                    unlink('src/php/sessions/' . $cookie['sess_id'] . '.json');
+                }
             }
         }
         return (int) $acc_id;
     }
 
-    public function get_cookie_auth($cookie): bool
+    public function get_cookie_auth($cookie, $ip): bool
     {
         $auth = false;
         if (isset($cookie['sess_id']))
         {
             try {
-                $this->session_config = new ConfigController('src/php/sessions/' . $cookie['sess_id'] . '.json', ConfigController::JSON);
-                if ($this->session_config->exists('login') && $this->session_config->exists('password'))
+                if (file_exists('src/php/sessions/' . $cookie['sess_id'] . '.json'))
                 {
-                    if ((new AccountsDB('src/php/database/AccountsDB.db'))->account_auth($this->session_config->get('login'), $this->session_config->get('password')))
+                    $this->session_config = new ConfigController('src/php/sessions/' . $cookie['sess_id'] . '.json', ConfigController::JSON);
+                    if ($this->session_config->exists('login') && $this->session_config->exists('password'))
                     {
-                        $auth = true;
+                        if ((new AccountsDB('src/php/database/AccountsDB.db'))->account_auth($this->session_config->get('login'), $this->session_config->get('password'), $ip))
+                        {
+                            $auth = true;
+                        }else{
+                            unlink('src/php/sessions/' . $cookie['sess_id'] . '.json');
+                        }
+                    }else{
+                        unlink('src/php/sessions/' . $cookie['sess_id'] . '.json');
                     }
                 }
             } catch (ErrorException $e) {}

@@ -5,12 +5,18 @@ require 'src/php/PersonalDB.php';
 require 'src/php/ProductsDB.php';
 require 'src/php/Functions.php';
 $formatter = new Functions();
-if(!$formatter->get_cookie_auth($_COOKIE)) header('Location: index.php?toast=no_auth');
+if(!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR']))
+{
+    header('Location: index.php?toast=no_auth');
+    unset($_COOKIE['sess_id']);
+    setcookie('sess_id', '', '-1', '');
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="src/css/bootstrap.css" rel="stylesheet">
     <link href="src/icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="src/css/index.css" rel="stylesheet">

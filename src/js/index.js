@@ -166,7 +166,12 @@ function authButton(){
                     toastr.success('Вы успешно авторизовались!', 'Успех!');
                     document.cookie = "sess_id=" + response.response;
                     setTimeout(function href(){
-                        location.href = 'personal.php';
+                        if(document.location.pathname == '/index.php')
+                        {
+                            location.href = 'personal.php';
+                        }else{
+                            location.href = window.location.href
+                        }
                     }, 1000);
                 }else{
                     toastr.error(response.error.message, 'Ошибка!');
@@ -205,7 +210,12 @@ function regButton(){
                     toastr.success('Вы успешно зарегистрировались!', 'Успех!');
                     document.cookie = "sess_id=" + response.response;
                     setTimeout(function href(){
-                        location.href = 'personal.php';
+                        if(document.location.pathname == '/index.php')
+                        {
+                            location.href = 'personal.php';
+                        }else{
+                            location.href = window.location.href
+                        }
                     }, 1000);
                 }else{
                     toastr.error(response.error.message, 'Ошибка!');
@@ -292,7 +302,7 @@ function add_to_cart(acc_id, product_id, element)
         var response = $.parseJSON(response);
         if(empty(response.error)){
             toastr.info('Товар добавлен в корзину!');
-            element.outerHTML = '<button type="button" onclick="del_from_cart(' + acc_id + ', ' + product_id + ', this)" style="background: #00bb0e" class="btn btn-primary buy-button">Удалить из корзины</button>\n';
+            element.outerHTML = '<button type="button" onclick="del_from_cart(' + acc_id + ', ' + product_id + ', this)" style="background: #00bb0e; border: 1px solid #00bb0e;" class="btn btn-primary buy-button">Удалить из корзины</button>\n';
         }else{
             toastr.error(response.error.message, 'Ошибка!');
         }

@@ -29,7 +29,7 @@ switch ($post)
                     $hash_password_confirm = hash('sha256', $password_confirm);
                     if ($hash_password == $hash_password_confirm)
                     {
-                        if ($accounts_db->account_registration($login, $hash_password, $_SERVER['REMOTE_ADDR']))
+                        if ($accounts_db->account_registration($login, $hash_password, $_SERVER['REMOTE_ADDR'], 'database/Personal_DB.db'))
                         {
                             $id = hash('sha256', generateRandomString(12));
                             try {
@@ -69,7 +69,7 @@ switch ($post)
                             error('Произошла ошибка создания сессии!', 5);
                         }
                     }else error('Не удалось провести авторизацию!', 4);
-                }else error('Аккаунт с таким логином уже зарегистрирован!', 2);
+                }else error('Аккаунта с таким логином не существует!', 2);
             }else error('Логин может состоять только из английских букв и цифр!', 1);
         }else error('Не введены все значения!', 0);
         break;
