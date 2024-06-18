@@ -1,4 +1,4 @@
-# Eather-Shop
+# Eather-Shop | [Demo](http://185.117.152.16/index.php)
 ### EN: An online store project created in pure PHP, JS, HTML, CSS. SQLite3 was used as the database.
 
 ### RU: Проект интернет-магазина, созданный на чистом PHP, JS, HTML, CSS. В качестве базы данных использовалась SQLite3.
