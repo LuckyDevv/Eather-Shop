@@ -22,7 +22,6 @@ $acc_id = $formatter->get_cookie_acc_id($_COOKIE);
     <title>Результаты поиска - EATHER</title>
 </head>
 <body>
-<?php echo $formatter->get_header(); ?>
 <div class="container-fluid" style="background-color: #f0f0ec">
     <br>
     <?php
