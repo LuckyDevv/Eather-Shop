@@ -65,7 +65,7 @@ if (isset($_GET['toast']))
     }
 }
 ?>
-<?php echo $formatter->get_header_script(); // ?>
+<?php echo $formatter->get_header_script(); ?>
 <script src="src/js/bootstrap.min.js"></script>
 </body>
 </html>
