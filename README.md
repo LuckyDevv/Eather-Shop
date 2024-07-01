@@ -1,7 +1,7 @@
 # Eather-Shop | [Demo](http://185.117.152.16/index.php)
-### EN: An online store project created in pure PHP, JS, HTML, CSS. MySQL was used as the database. You can see the old update here: [~Click~](https://github.com/LuckyDevv/Eather-Shop/blob/main/Update_0_1_2.md) 
+### EN: An online store project created in pure PHP, JS, HTML, CSS. MySQL was used as the database. You can see the old update here: [Click](https://github.com/LuckyDevv/Eather-Shop/blob/main/Update_0_1_2.md) 
 
-### RU: Проект интернет-магазина, созданный на чистом PHP, JS, HTML, CSS. В качестве базы данных использовалась MySQL. Старое обновление вы можете увидеть тут: [~Клик~](https://github.com/LuckyDevv/Eather-Shop/blob/main/Update_0_1_2.md)
+### RU: Проект интернет-магазина, созданный на чистом PHP, JS, HTML, CSS. В качестве базы данных использовалась MySQL. Старое обновление вы можете увидеть тут: [Клик](https://github.com/LuckyDevv/Eather-Shop/blob/main/Update_0_1_2.md)
 
 # Update 0.2.0 (EN):
 #### Hello, hello! Update 0.2.0 was released today. This version is not a release version, the project will be in development presumably until 08/31/2024. The deadlines may vary depending on the scope of work. I've been working very hard on this update. A lot of things have been updated, namely:
