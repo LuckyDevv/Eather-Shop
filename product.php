@@ -1,11 +1,12 @@
 <?php
-require 'src/php/ProductsDB.php';
-require 'src/php/PersonalDB.php';
+require 'src/php/database/ProductsDB.php';
+require 'src/php/database/PersonalDB.php';
 require 'src/php/ConfigController.php';
-require 'src/php/AccountsDB.php';
+require 'src/php/database/AccountsDB.php';
 require 'src/php/Functions.php';
+require 'src/php/ErrorManager.php';
 $formatter = new Functions();
-$products_db = new ProductsDB('src/php/database/Products_DB.db');
+$products_db = new ProductsDB();
 $product_id = $_GET['product_id'] ?? null;
 $find = false;
 $acc_id = $formatter->get_cookie_acc_id($_COOKIE, $_SERVER['REMOTE_ADDR']);
@@ -22,11 +23,12 @@ if(is_numeric($product_id)) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="src/css/bootstrap.css" rel="stylesheet">
+    <link href="src/css/bootstrap.min.css" rel="stylesheet">
     <link href="src/icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="src/css/product.css" rel="stylesheet">
     <link href="src/css/gallery.css" rel="stylesheet">
     <link href="src/toastr/toastr.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo/logo.png">
     <?php
     if($find)
     {
@@ -37,8 +39,7 @@ if(is_numeric($product_id)) {
     ?>
 </head>
 <body>
-<?php echo $formatter->get_header(); ?>
-<div class="container-fluid p-2 m-2">
+<div class="container-fluid margin-custom">
     <div class="row p-1 justify-content-center">
     <?php
     if($find)
@@ -79,7 +80,7 @@ if(is_numeric($product_id)) {
             $amount_text = '<div class="center-text text-delivery"></div>';
             if ($acc_id)
             {
-                if (!(new PersonalDB('src/php/database/Personal_DB.db'))->cart_exists_product($acc_id, $product_id))
+                if (!(new PersonalDB())->cart_exists_product($acc_id, $product_id))
                 {
                     $buy_button = '<button type="button" onclick="add_to_cart('.$acc_id.', '.$product_id.', this)" style="background: #0d6efd" class="btn btn-primary buy-button">Добавить в корзину</button>
                            <div class="text-delivery"> В наличии <b>'.$amount.' штук</b>. Доставим <b>завтра</b></div>';
@@ -99,18 +100,24 @@ if(is_numeric($product_id)) {
         }
 
         if($old_price !== 0){
-            $discount = round((($old_price - $price) / $old_price) * 100);
-            $discount_text = $discount >= 1 ? '<t style="color: red; font-weight: bolder">-'.$discount.'%</t>' : null;
-            $format_old_price = number_format($old_price, 2, ',', ' ');
-            if($discount < 0){
-                $change_text = '<i class="bi bi-graph-up-arrow" style="color: red"></i> Цена повысилась';
-            }else{
-                $change_text = '<i class="bi bi-graph-down-arrow" style="color: #00bb0e;"></i> Цена понизилась';
-            }
-            $change_text = '<div class="center-text">новая цена</div><br>
+            try {
+                $discount = round((($old_price - $price) / $old_price) * 100);
+
+                $discount_text = $discount >= 1 ? '<t style="color: red; font-weight: bolder">-'.$discount.'%</t>' : null;
+                $format_old_price = number_format($old_price, 2, ',', ' ');
+                if($discount < 0){
+                    $change_text = '<i class="bi bi-graph-up-arrow" style="color: red"></i> Цена повысилась';
+                }else{
+                    $change_text = '<i class="bi bi-graph-down-arrow" style="color: #00bb0e;"></i> Цена понизилась';
+                }
+                $change_text = '<div class="center-text">новая цена</div><br>
                             <div class="old-price-block m-2">'.$format_old_price.' ₽</div>
                             <div class="center-text">старая цена '.$discount_text.'</div><br>
                             <div class="center-text">'.$change_text.'</div><br>';
+            }catch(\DivisionByZeroError $e){
+                (new ErrorManager())->getExceptionLog($e, 'product');
+                $change_text = '<div class="center-text">не удалось получить данные об изменениях цены</div><br>';
+            }
         }else{
             $change_text = '<div class="center-text">цена ещё не менялась</div><br>';
         }
@@ -153,9 +160,11 @@ if(is_numeric($product_id)) {
 </div>
 
 <script src="src/js/jquery.min.js"></script>
-<script src="src/js/index.js"></script>
 <script src="src/toastr/toastr.js"></script>
+<script src="src/js/product.js"></script>
+<script src="src/js/auth.js"></script>
+<script src="src/js/gallery.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
-<script src="src/js/popper.min.js"></script>
+<?php echo $formatter->get_header_script(); ?>
 </body>
 </html>

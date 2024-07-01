@@ -109,6 +109,110 @@ button.heart:hover{
 p {
     font-size: 20px
 }
+.float-left-block{
+    float: left;
+}
+.float-right-block{
+    float: right;
+}
+.flex-block{
+    background-color: #f0f0ec;
+    height: 100%;
+    display:flex;
+    flex-direction:row;
+}
+.center-text{
+    text-align: center;
+}
+.product-card {
+    max-width: 243px;
+    width: auto;
+    height: 349px;
+}
+.product-card-img {
+    height: 241px;
+}
+.a_product{
+    text-decoration: none !important;
+    background-color: transparent;
+}
+.a_product:hover{
+    text-decoration: none;
+    background-color: transparent;
+}
+.m-7-top{
+    margin-top: 7px;
+}
+.shadow-35-10 {
+    -webkit-box-shadow: 0 0 35px 10px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0 0 35px 10px rgba(34, 60, 80, 0.2);
+    box-shadow: 0 0 35px 10px rgba(34, 60, 80, 0.2);
+}
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    border: 1px solid rgba(173, 177, 171, 0.5);
+    border-radius: 0 0 40px 40px;
+}
+.nav-text {
+    font-size: 14px;
+    margin-top: 0;
+    font-weight: 400
+}
+.input-search {
+    margin-left: 10px;
+    border-radius: 12px;
+    height: 46px;
+    border: 2px solid #198754;
+    line-height: 100px;
+}
+.input-search:focus {
+    box-shadow: 0 0 7px 2px #198754;
+    outline:none;
+    border: 2px solid #198754;
+}
+.input-search:-webkit-autofill{
+    box-shadow: inset 0 0 0 1000px #fff;
+    outline: none;
+    border: 2px solid #198754;
+}
+.button-search {
+    border-radius: 12px;
+    width: 65px;
+    height: 46px;
+    margin-right: 10px;
+}
+.button-search:focus {
+    box-shadow: 0 0 7px 2px #198754;
+    outline:none;
+}
+.button-search:hover {
+    transform: scale(1);
+}
+ul.navvfsd li{
+    display: inline;
+}
+.nav-item-2 {
+    margin-right: 20px;
+    margin-left: 20px;
+    color: #585c57;
+}
+.nav-item-active {
+    color: #000000;
+}
+.sticky-bottm {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1020;
+    border: 1px solid rgba(173, 177, 171, 0.5);
+    border-radius: 40px 40px 0 0;
+}
+.margin-custom {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 @media (max-width: 1650px) {
     .styled-block-1{
         border-radius: 15px;
@@ -193,5 +297,12 @@ p {
     .text-delivery{
         text-align: center;
         font-size: 1.1em;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .margin-custom {
+        margin-bottom: 55px;
+        margin-top: 0
     }
 }

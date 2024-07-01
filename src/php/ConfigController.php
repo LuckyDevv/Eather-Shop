@@ -20,7 +20,11 @@ class ConfigController{
      * @throws ErrorException
      */
     public function __construct(string $filename = 'default.txt', $type = ConfigController::DETECT, $default = []){
-        $this->init($filename, $type, $default);
+        try {
+            $this->init($filename, $type, $default);
+        }catch (ErrorException $e){
+            echo (new ErrorManager())->getExceptionLog($e, 'ConfigController');
+        }
     }
 
     /**

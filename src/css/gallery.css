@@ -8,7 +8,6 @@ html, body {
 }
 
 .C-carousel {
-  background: #212121;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -17,7 +16,6 @@ html, body {
 }
 @media  (max-width: 1650px) {
   .C-carousel {
-    background: #212121;
     height: 42vh;
     width: 42vh;
     overflow: hidden;
@@ -63,14 +61,6 @@ html, body {
       border-radius: 0;
     }
   }
-
-
-  @for $i from 1 through 5 {
-    &:nth-child(#{$i}) {
-      background-image: url(https://picsum.photos/1480/800?image=#{$i * 11});
-    }
-  }
-
 }
 
 .C-navigation {
