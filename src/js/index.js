@@ -1,6 +1,3 @@
-function empty(mixed_var) {
-    return (mixed_var === "" || mixed_var === 0 || mixed_var === "0" || mixed_var === null || mixed_var === false || mixed_var === undefined || mixed_var.length === 0);
-}
 function deleteFavorite(acc_id, product_id, element)
 {
     $.post('src/php/handlers/personal_handler.php', {'type': 'delete_favorite', 'acc_id': acc_id, 'product_id': product_id}, function(data){
@@ -79,10 +76,10 @@ $('a.a_product').click(function (e) {
         e.preventDefault()
     }
 });
-$('.block-favorite').click(function (e){
+$('.block-favorite').click(function (){
     location.href = 'favorites.php';
 });
 
-$('.block-cart').click(function (e){
+$('.block-cart').click(function (){
     location.href = 'cart.php';
 });

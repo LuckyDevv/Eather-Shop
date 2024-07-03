@@ -162,7 +162,7 @@ if(is_numeric($product_id)) {
 <script src="src/js/jquery.min.js"></script>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/product.js"></script>
-<script src="src/js/auth.js"></script>
+<script src="src/js/main.js"></script>
 <script src="src/js/gallery.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
 <?php echo $formatter->get_header_script(); ?>

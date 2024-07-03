@@ -30,7 +30,7 @@ if(!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR']))
 <script src="src/js/jquery.min.js"></script>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/support.js"></script>
-<script src="src/js/auth.js"></script>
+<script src="src/js/main.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
 <?php echo $formatter->get_header_script(); ?>
 </body>

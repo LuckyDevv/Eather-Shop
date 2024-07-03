@@ -2,36 +2,10 @@ no_auth = false;
 let shift = false;
 let enter = false;
 let sleep = 0;
-
-$.ajaxSetup({ cache: false });
 $(function(){
     // инициализации подсказок для всех элементов на странице, имеющих атрибут data-toggle="tooltip"
     $('[data-toggle="tooltip"]').tooltip();
 });
-function empty(mixed_var) {
-    return (mixed_var === "" || mixed_var === 0 || mixed_var === "0" || mixed_var === null || mixed_var === false || mixed_var === undefined || mixed_var.length === 0);
-}
-function getCookie(name) {
-    let end;
-    const dc = document.cookie;
-    const prefix = name + "=";
-    let begin = dc.indexOf("; " + prefix);
-    if (begin === -1) {
-        begin = dc.indexOf(prefix);
-        if (begin !== 0) return null;
-    }
-    else
-    {
-        begin += 2;
-        end = document.cookie.indexOf(";", begin);
-        if (end === -1) {
-            end = dc.length;
-        }
-    }
-    // because unescape has been deprecated, replaced with decodeURI
-    //return unescape(dc.substring(begin + prefix.length, end));
-    return decodeURI(dc.substring(begin + prefix.length, end));
-}
 function updateChatList(){
     let chat_list = document.getElementById('chat_list');
     $.post('src/php/handlers/support_handler.php', {'type': 'get_tickets', 'sess_id': getCookie('sess_id')}, function (data){

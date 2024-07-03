@@ -5,7 +5,8 @@ class ProductsDB
     public function __construct()
     {
         try {
-            $this->db = new mysqli('localhost', 'root', 'eather1192@How91');
+            $settings = ConfigController::MYSQL_CONNECTION;
+            $this->db = new mysqli($settings['addr'], $settings['user'], $settings['password']);
             $this->db->query("CREATE DATABASE IF NOT EXISTS products_db;");
             $this->db->query("SET NAMES utf8;");
             $this->db->query("USE products_db;");

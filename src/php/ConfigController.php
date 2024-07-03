@@ -2,6 +2,11 @@
 class ConfigController{
     private string $filename;
     private array $config = [];
+    public const array MYSQL_CONNECTION = [
+        'addr' => '',
+        'user' => '',
+        'password' => ''
+    ];
     const int DETECT = 0;
     const int JSON = 1;
     const int SERIALIZED = 2;

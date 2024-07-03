@@ -16,6 +16,7 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 }
+$.ajaxSetup({ cache: false });
 let header_;
 let header_mobile_;
 let search_;
@@ -27,16 +28,14 @@ function search_product()
         location.href = 'search.php?find_name=' + param;
     }
 }
-function deleteCookie(name, path = '/') {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + path;
-}
 function empty(mixed_var) {
     return (mixed_var === "" || mixed_var === 0 || mixed_var === "0" || mixed_var === null || mixed_var === false || mixed_var === undefined || mixed_var.length === 0);
 }
 function getCookie(name) {
-    var dc = document.cookie;
-    var prefix = name + "=";
-    var begin = dc.indexOf("; " + prefix);
+    let end;
+    const dc = document.cookie;
+    const prefix = name + "=";
+    let begin = dc.indexOf("; " + prefix);
     if (begin === -1) {
         begin = dc.indexOf(prefix);
         if (begin !== 0) return null;
@@ -44,13 +43,11 @@ function getCookie(name) {
     else
     {
         begin += 2;
-        var end = document.cookie.indexOf(";", begin);
+        end = document.cookie.indexOf(";", begin);
         if (end === -1) {
             end = dc.length;
         }
     }
-    // because unescape has been deprecated, replaced with decodeURI
-    //return unescape(dc.substring(begin + prefix.length, end));
     return decodeURI(dc.substring(begin + prefix.length, end));
 }
 function create(htmlStr) {
@@ -88,7 +85,6 @@ $(document).ready(function(){
             }
         });
     }
-
 });
 function nextReady()
 {
@@ -173,16 +169,16 @@ function authButton(){
             return true;
         }
         if(!empty(login) && !empty(password)) {
-            $.post('src/php/handlers/auth.php', {'type': 'auth', 'login': login, 'password': password}, function(response){
-                var response = $.parseJSON(response);
-                if(empty(response.error)){
+            $.post('src/php/handlers/auth.php', {'type': 'auth', 'login': login, 'password': password}, function(data){
+                var data_parsed = $.parseJSON(data);
+                if(empty(data_parsed.error)){
                     toastr.success('Вы успешно авторизовались!', 'Успех!');
-                    document.cookie = "sess_id=" + response.response;
+                    document.cookie = "sess_id=" + data_parsed.response;
                     $('.btn-close')?.click();
                     document.getElementById('authModal')?.remove();
                     document.getElementById('regModal')?.remove();
                 }else{
-                    toastr.error(response.error.message, 'Ошибка!');
+                    toastr.error(data_parsed.error.message, 'Ошибка!');
                 }
             });
         }else toastr.error('Не введены требуемые данные!', 'Ошибка!');
@@ -191,9 +187,8 @@ function authButton(){
 function regButton(){
     if(empty(getCookie('sess_id')))
     {
-        var login = $('#reg_login_input').val();
-        var password = $('#reg_password_input').val();
-        var password_confirm = $('#reg_password_2step_input').val();
+        const login = $('#reg_login_input').val();
+        const password = $('#reg_password_input').val();
         toastr.options.timeOut = 2000;
         if(empty(login)){
             toastr.error('Вы не ввели логин!', 'Ошибка!')
@@ -212,16 +207,16 @@ function regButton(){
             return true;
         }
         if(!empty(login) && !empty(password) && !empty(password_confirm)) {
-            $.post('src/php/handlers/auth.php', {'type': 'registration', 'login': login, 'password': password, 'password_confirm': password_confirm}, function(response){
-                var response = $.parseJSON(response);
-                if(empty(response.error)){
+            $.post('src/php/handlers/auth.php', {'type': 'registration', 'login': login, 'password': password, 'password_confirm': password_confirm}, function(data){
+                const data_parsed = $.parseJSON(data);
+                if(empty(data_parsed.error)){
                     toastr.success('Вы успешно зарегистрировались!', 'Успех!');
-                    document.cookie = "sess_id=" + response.response;
+                    document.cookie = "sess_id=" + data_parsed.response;
                     $('.btn-close')?.click();
                     document.getElementById('authModal')?.remove();
                     document.getElementById('regModal')?.remove();
                 }else{
-                    toastr.error(response.error.message, 'Ошибка!');
+                    toastr.error(data_parsed.error.message, 'Ошибка!');
                 }
             });
         }else toastr.error('Не введены требуемые данные!', 'Ошибка!');
@@ -259,16 +254,7 @@ function reportWindowSize() {
                     item.remove();
                 });
                 document.body.insertBefore(create(header_), document.body.childNodes[0]);
-                if (!empty(getCookie('sess_id')))
-                {
-                    let personal_btn = document.getElementById('personal-btn');
-                    if (!empty(personal_btn)) {
-                        personal_btn.removeAttribute('data-bs-toggle');
-                        personal_btn.removeAttribute('data-bs-target');
-                        personal_btn.removeAttribute('href');
-                        personal_btn.setAttribute('href', 'personal.php');
-                    }
-                }
+                update_personal_button();
             }
         }
     }else{
@@ -290,16 +276,22 @@ function reportWindowSize() {
                 document.body.insertBefore(create(search_), document.body.childNodes[0]);
                 document.body.insertBefore(create(header_mobile_), document.body.childNodes[-1]);
                 setActiveNav();
-                if (!empty(getCookie('sess_id'))) {
-                    let personal_btn = document.getElementById('personal-btn');
-                    if (!empty(personal_btn)) {
-                        personal_btn.removeAttribute('data-bs-toggle');
-                        personal_btn.removeAttribute('data-bs-target');
-                        personal_btn.removeAttribute('href');
-                        personal_btn.setAttribute('href', 'personal.php');
-                    }
-                }
+                update_personal_button();
             }
+        }
+    }
+}
+
+function update_personal_button()
+{
+    if (!empty(getCookie('sess_id')))
+    {
+        let personal_btn = document.getElementById('personal-btn');
+        if (!empty(personal_btn)) {
+            personal_btn.removeAttribute('data-bs-toggle');
+            personal_btn.removeAttribute('data-bs-target');
+            personal_btn.removeAttribute('href');
+            personal_btn.setAttribute('href', 'personal.php');
         }
     }
 }

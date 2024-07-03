@@ -55,7 +55,7 @@ if ($new_products == '</div>' && $top_products == '</div>') {
 ?>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/index.js"></script>
-<script src="src/js/auth.js"></script>
+<script src="src/js/main.js"></script>
 <?php
 if (isset($_GET['toast']))
 {
