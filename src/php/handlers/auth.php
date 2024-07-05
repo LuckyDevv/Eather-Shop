@@ -46,7 +46,7 @@ function response($message): void
 {
     die(json_encode(['response' => $message], JSON_OPTIONS));
 }
-
+@mkdir('../sessions');
 switch ($post)
 {
     case 'registration':

@@ -9,7 +9,6 @@ $formatter = new Functions();
 $products_db = new ProductsDB();
 $top_products = $products_db->product_get_top_sales();
 $new_products = $products_db->product_get_news();
-$acc_id = $formatter->get_cookie_acc_id($_COOKIE);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -63,6 +62,9 @@ if (isset($_GET['toast']))
     {
         echo '<script>no_auth = true;</script>';
     }
+}
+if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
+    echo '<script>change = true;</script>';
 }
 ?>
 <?php echo $formatter->get_header_script(); ?>

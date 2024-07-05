@@ -9,7 +9,7 @@
         </form>
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li class="nav-item" id="mainEl">
                     <center>
                         <a class="nav-link active" aria-current="page" href="index.php">
                             <h4 style="margin: 0;"><i class="bi bi-house"></i></h4>
@@ -17,39 +17,39 @@
                         </a>
                     </center>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="personalEl">
                     <center>
                         <a id="personal-btn" class="nav-link active" aria-current="page" data-bs-toggle="modal" data-bs-target="#authModal" href="#">
-                            <h4 style="margin: 0;"><i class="bi bi-person-circle"></i></h4>
-                            <t class="nav-text">Профиль</t>
+                            <h4 style="margin: 0;"><i class="bi bi-person-circle" id="personalIcon"></i></h4>
+                            <t class="nav-text" id="personalText">Профиль</t>
                         </a>
                     </center>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="ordersEl">
                     <center>
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" href="orders.php">
                             <h4 style="margin: 0;"><i class="bi bi-box-seam"></i></h4>
                             <t class="nav-text">Заказы</t>
                         </a>
                     </center>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="cartEl">
                     <center>
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" href="cart.php">
                             <h4 style="margin: 0;"><i class="bi bi-basket"></i></h4>
                             <t class="nav-text">Корзина</t>
                         </a>
                     </center>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="favoritesEl">
                     <center>
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" href="favorites.php">
                             <h4 style="margin: 0;"><i class="bi bi-heart"></i></h4>
                             <t class="nav-text">Избранное</t>
                         </a>
                     </center>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="supportEl">
                     <center>
                         <a class="nav-link active" aria-current="page" onclick="supportBtn()" href="#">
                             <h4 style="margin: 0;"><i class="bi bi-patch-question"></i></h4>

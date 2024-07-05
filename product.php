@@ -165,6 +165,10 @@ if(is_numeric($product_id)) {
 <script src="src/js/main.js"></script>
 <script src="src/js/gallery.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
-<?php echo $formatter->get_header_script(); ?>
+<?php echo $formatter->get_header_script();
+if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
+    echo '<script>change = true;</script>';
+}
+?>
 </body>
 </html>

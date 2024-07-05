@@ -4,13 +4,6 @@ class Functions
     public ConfigController $session_config;
     public function __construct(){}
 
-    public function get_header(bool $isMobile = false): string{
-        if ($isMobile) {
-            return $this->getTemplate('header_mobile');
-        }else{
-            return $this->getTemplate('header');
-        }
-    }
     public function get_header_script(): string {
         return "<script>
     const items = document.querySelectorAll('.nav-item');
@@ -28,6 +21,7 @@ class Functions
     });
 </script>";
     }
+
     public function get_cart_button(int $acc_id, int $product_id): string
     {
         $request = (new PersonalDB())->cart_exists_product($acc_id, $product_id);
@@ -138,11 +132,6 @@ class Functions
         return $auth;
     }
 
-    public function get_session_config(): ConfigController
-    {
-        return $this->session_config;
-    }
-
     public function get_products(array $cookie, string $title, array $products, int $limit = 999999, bool $returnIfNull = false, $notLoadMessage = '', bool $isSearch = false): string
     {
         $returnText = '';
@@ -197,7 +186,7 @@ class Functions
             if ($count >= 1)
             {
                 $returnText .= '<div class="styled-block-1 p-2"><h3 class="align-content-center">'.$title.'</h3>
-                                    <div class="row row-cols-auto row-cols-md-auto p-3 justify-content-center">'
+                                    <div class="row row-cols-auto row-cols-md-auto justify-content-center">'
                     .$content.
                     '</div>
                                 </div>';
@@ -207,62 +196,6 @@ class Functions
                                                   </div>' : '';
         }
         $returnText .= '</div>';
-        return $returnText;
-    }
-
-    public function get_personal_products(int $type): string
-    {
-        $class = $type == 0 ? 'favorite' : 'cart';
-        $title = $type == 0 ? 'ИЗБРАННОЕ' : 'КОРЗИНА';
-        $returnText = '<div class="block-card block-'.$class.'">
-        <div class="block-title title-'.$class.'">
-            <p>'.$title.'</p>
-        </div>
-        <div class="img-block align-content-center">';
-        $image_tpl = '<img src="photos/%photo1%" class="img-block img1 img-shadow" alt="">
-                    <img src="photos/%photo2%" class="img-block img2 img-shadow" alt="">
-                    <img src="photos/%photo3%" class="img-block img3 img-shadow" alt="">';
-        $login = $this->get_session_config()->get('login');
-        if ($login !== false)
-        {
-            $acc_id = (new AccountsDB())->account_get_by_login($login);
-            if ($acc_id !== false)
-            {
-                $products = $type == 0 ? (new PersonalDB())->favorites_products_get_all($acc_id) : (new PersonalDB('src/php/database/database/Personal_DB.db'))->cart_products_get_all($acc_id);
-                if ($products !== false) {
-                    $count_products = 1;
-                    foreach ($products as $product_id) {
-                        if ($product_id == '') {
-                            $count_products++;
-                            continue;
-                        }
-                        if ($count_products >= 4) break;
-                        $product_ = (new ProductsDB())->product_find_by_id($product_id);
-                        if ($product_ !== false) {
-                            $photo = 'no-img.jpg';
-                            foreach (explode(',', $product_['product_photo']) as $photo_) {
-                                if (!is_file('photos/' . $photo_)) continue;
-                                $photo = $photo_;
-                                break;
-                            }
-                            $image_tpl = str_replace(array(
-                                '%product_id'.$count_products.'%',
-                                '%photo'.$count_products.'%'),
-                                array(
-                                    $product_['product_id'],
-                                    $photo,
-                                ),
-                                $image_tpl);
-                            $count_products++;
-                        } else continue;
-                    }
-                    if ($count_products >= 1) {
-                        $returnText .= $image_tpl;
-                    } else $returnText .= '<h2>Тут пусто :(</h2>';
-                } else $returnText .= '<h2>Тут пусто :(</h2>';
-            }
-        }
-        $returnText .= '</div></div>';
         return $returnText;
     }
     public function getTemplate(string $name): false|string

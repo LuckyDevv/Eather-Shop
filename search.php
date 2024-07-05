@@ -48,6 +48,9 @@ if($find_name !== false) {
 </script>
 ";
 }
+if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
+    echo '<script>change = true;</script>';
+}
 ?>
 </body>
 </html>
