@@ -31,6 +31,7 @@ body {
 .avatar {
     border-radius: 50%;
     max-width: 200px;
+    max-height: 200px;
     border: 2px solid #198754;
     cursor: pointer;
 }
