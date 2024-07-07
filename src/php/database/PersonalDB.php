@@ -69,6 +69,15 @@ class PersonalDB
         return $this->exists($request, $product_id);
     }
 
+    public function get_wallet_id(int $acc_id): int|false {
+        $request = $this->db->query("SELECT * FROM wallets WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result) {
+            $fetched = $request->fetch_all(MYSQLI_ASSOC);
+            return $fetched[0]['wallet_id'];
+        }
+        return false;
+    }
+
     /**
      * @param mysqli_result|bool $request
      * @return false|string[]

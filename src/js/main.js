@@ -71,6 +71,7 @@ $(document).ready(function(){
                 document.body.insertBefore(create(header_), document.body.childNodes[0]);
                 nextReady();
             }else{
+                toastr.remove();
                 toastr.error('Не удалось загрузить модули, перезагрузите страницу!', 'Критическая ошибка!');
             }
         });
@@ -84,6 +85,7 @@ $(document).ready(function(){
                 document.body.insertBefore(create(header_mobile_), document.body.childNodes[-1]);
                 nextReady();
             }else{
+                toastr.remove();
                 toastr.error('Не удалось загрузить модули, перезагрузите страницу!', 'Критическая ошибка!');
             }
         });
@@ -98,6 +100,7 @@ function nextReady()
                 document.body.insertBefore(create(data_parsed.auth), document.body.childNodes[0]);
                 document.body.insertBefore(create(data_parsed.reg), document.body.childNodes[0]);
             }else{
+                toastr.remove();
                 toastr.error('Не удалось загрузить модальные окна, перезагрузите страницу!', 'Критическая ошибка!');
             }
         });
@@ -114,6 +117,7 @@ function nextReady()
     {
         if(empty(getCookie('sess_id')))
         {
+            toastr.remove();
             toastr.error('Вы не авторизованы!', 'Ошибка!');
         }else{
             location.href = 'index.php';
@@ -132,7 +136,6 @@ function changeIcons()
         document.getElementById('supportEl')?.remove();
         var prsTxt = document.getElementById('personalText');
         if (prsTxt !== null){  prsTxt.innerHTML = 'Войти';  }
-        prsTxt = null;
         var prsIcon = document.getElementById('personalIcon');
         if (prsIcon !== null){
             prsIcon.classList.replace('bi-person-circle', 'bi-box-arrow-in-right');
@@ -183,10 +186,12 @@ function authButton(){
         var login = $('#login_input').val();
         var password = $('#password_input').val();
         if(empty(login)){
+            toastr.remove();
             toastr.error('Вы не ввели логин!', 'Ошибка!')
             return true;
         }
         if(empty(password)){
+            toastr.remove();
             toastr.error('Вы не ввели пароль!', 'Ошибка!')
             return true;
         }
@@ -194,37 +199,50 @@ function authButton(){
             $.post('src/php/handlers/auth.php', {'type': 'auth', 'login': login, 'password': password}, function(data){
                 var data_parsed = $.parseJSON(data);
                 if(empty(data_parsed.error)){
+                    toastr.remove();
                     toastr.success('Вы успешно авторизовались!', 'Успех!');
                     document.cookie = "sess_id=" + data_parsed.response;
                     $('.btn-close')?.click();
                     document.getElementById('authModal')?.remove();
                     document.getElementById('regModal')?.remove();
                 }else{
+                    toastr.remove();
                     toastr.error(data_parsed.error.message, 'Ошибка!');
                 }
             });
-        }else toastr.error('Не введены требуемые данные!', 'Ошибка!');
-    }else toastr.error('Вы уже вошли в аккаунт!', 'Ошибка!');
+        }else{
+            toastr.remove();
+            toastr.error('Не введены требуемые данные!', 'Ошибка!');
+        }
+    }else{
+        toastr.error('Вы уже вошли в аккаунт!', 'Ошибка!');
+        toastr.remove();
+    }
 }
 function regButton(){
     if(empty(getCookie('sess_id')))
     {
         var login = $('#reg_login_input').val();
         var password = $('#reg_password_input').val();
+        var password_confirm = $('#reg_password_2step_input').val();
         toastr.options.timeOut = 2000;
         if(empty(login)){
+            toastr.remove();
             toastr.error('Вы не ввели логин!', 'Ошибка!')
             return true;
         }
         if(empty(password)){
+            toastr.remove();
             toastr.error('Вы не ввели пароль!', 'Ошибка!')
             return true;
         }
         if(empty(password_confirm)){
+            toastr.remove();
             toastr.error('Вы не ввели подтверждение пароля!', 'Ошибка!')
             return true;
         }
         if(password !== password_confirm){
+            toastr.remove();
             toastr.error('Подтверждение пароля не совпадает с паролем!', 'Ошибка!')
             return true;
         }
@@ -232,21 +250,30 @@ function regButton(){
             $.post('src/php/handlers/auth.php', {'type': 'registration', 'login': login, 'password': password, 'password_confirm': password_confirm}, function(data){
                 const data_parsed = $.parseJSON(data);
                 if(empty(data_parsed.error)){
+                    toastr.remove();
                     toastr.success('Вы успешно зарегистрировались!', 'Успех!');
                     document.cookie = "sess_id=" + data_parsed.response;
                     $('.btn-close')?.click();
                     document.getElementById('authModal')?.remove();
                     document.getElementById('regModal')?.remove();
                 }else{
+                    toastr.remove();
                     toastr.error(data_parsed.error.message, 'Ошибка!');
                 }
             });
-        }else toastr.error('Не введены требуемые данные!', 'Ошибка!');
-    }else toastr.error('Вы уже вошли в аккаунт!', 'Ошибка!');
+        }else{
+            toastr.error('Не введены требуемые данные!', 'Ошибка!');
+            toastr.remove();
+        }
+    }else{
+        toastr.error('Вы уже вошли в аккаунт!', 'Ошибка!');
+        toastr.remove();
+    }
 }
 function supportBtn(){
     if (empty(getCookie('sess_id')))
     {
+        toastr.remove();
         toastr.error('Вы не авторизованы!', 'Ошибка!');
     }else{
         location.href = 'support.php';
@@ -266,6 +293,7 @@ function reportWindowSize() {
                 if (!empty(data_parsed.header)){
                     header_ = data_parsed.header;
                 }else{
+                    toastr.remove();
                     toastr.error('Не удалось загрузить модули, перезагрузите страницу!', 'Критическая ошибка!');
                 }
             });
@@ -288,6 +316,7 @@ function reportWindowSize() {
                     header_mobile_ = data_parsed.header;
                     search_ = data_parsed.search;
                 }else{
+                    toastr.remove();
                     toastr.error('Не удалось загрузить модули, перезагрузите страницу!', 'Критическая ошибка!');
                 }
             });

@@ -51,10 +51,7 @@ class AccountsDB
         if ($request instanceof mysqli_result)
         {
             $fetched = $request->fetch_all(MYSQLI_ASSOC);
-            if (count($fetched) === 1)
-            {
-                return $fetched[0]['acc_id'];
-            }
+            return $fetched[0]['acc_id'];
         }
         return false;
     }
@@ -135,6 +132,88 @@ class AccountsDB
             {
                 return $fetched[0]['devices'];
             }
+        }
+        return false;
+    }
+    public function login_get(int $acc_id)
+    {
+        $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result)
+        {
+            $fetched = $request->fetch_all(MYSQLI_ASSOC);
+            return $fetched[0]['acc_login'];
+        }
+        return false;
+    }
+    public function login_set(int $acc_id, string $new_login): bool
+    {
+        $get = $this->avatar_get($acc_id);
+        if ($get !== false && $new_login !== $get)
+        {
+            $new_login = mb_strtolower($new_login, 'utf-8');
+            $result = $this->db->query("UPDATE accounts SET acc_login = '$new_login' WHERE acc_id=$acc_id;");
+            if ($result !== false) return true;
+        }
+        return false;
+    }
+    public function name_get(int $acc_id)
+    {
+        $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result)
+        {
+            $fetched = $request->fetch_all(MYSQLI_ASSOC);
+            return $fetched[0]['user_name'];
+        }
+        return false;
+    }
+    public function name_set(int $acc_id, string $new_name): bool
+    {
+        $get = $this->avatar_get($acc_id);
+        if ($get !== false && $new_name !== $get)
+        {
+            $result = $this->db->query("UPDATE accounts SET user_name = '$new_name' WHERE acc_id=$acc_id;");
+            if ($result !== false) return true;
+        }
+        return false;
+    }
+    public function avatar_get(int $acc_id)
+    {
+        $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result)
+        {
+            $fetched = $request->fetch_all(MYSQLI_ASSOC);
+            return $fetched[0]['avatar'];
+        }
+        return false;
+    }
+    public function avatar_set(int $acc_id, string $new_avatar): bool
+    {
+        $get = $this->avatar_get($acc_id);
+        if ($get !== false)
+        {
+            $result = $this->db->query("UPDATE accounts SET avatar = '$new_avatar' WHERE acc_id=$acc_id;");
+            if ($result !== false) return true;
+        }
+        return false;
+    }
+
+    public function password_get(int $acc_id)
+    {
+        $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result)
+        {
+            $fetched = $request->fetch_all(MYSQLI_ASSOC);
+            return $fetched[0]['password'];
+        }
+        return false;
+    }
+    public function password_set(int $acc_id, string $new_password): bool
+    {
+        $get = $this->password_get($acc_id);
+        if ($get !== false && $new_password !== $get)
+        {
+            $result = $this->db->query("UPDATE accounts SET password = '$new_password' WHERE acc_id=$acc_id;");
+            if ($result !== false) return true;
         }
         return false;
     }

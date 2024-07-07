@@ -69,7 +69,7 @@ class Functions
         if ($isHandler) {
             $path_sessions = '../sessions/' . $session . '.json';
         }else{
-            $path_sessions = 'sessions/' . $session . '.json';
+            $path_sessions = 'src/php/sessions/' . $session . '.json';
         }
         $acc_id = false;
         if (file_exists($path_sessions))

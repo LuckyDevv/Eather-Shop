@@ -17,6 +17,7 @@ function updateChatList(){
             {
                 location.href = 'index.php?toast=no_auth';
             }else{
+                toastr.remove();
                 toastr.error(data_parsed.error.message, 'Ошибка!');
             }
             console.log(data_parsed.error.message);
@@ -58,6 +59,7 @@ function setChat(element)
             {
                 location.href = 'index.php?toast=no_auth';
             }else{
+                toastr.remove();
                 toastr.error(data_parsed.error.message, 'Ошибка!');
             }
             console.log(data_parsed.error.message);
@@ -145,14 +147,24 @@ function sendMessage()
                         chat_history = document.getElementById('chat_messages');
                         chat_history.scrollTo({ left: 0, top: chat_history.scrollHeight, behavior: "smooth" });
                     }else{
+                        toastr.remove();
                         toastr.error(data_parsed.error.message, 'Ошибка!');
                     }
                 });
                 sleep = Math.floor(Date.now() / 1000) + 5;
-            }else toastr.error('Подождите ещё ' + (sleep - Math.floor(Date.now() / 1000)) + ' сек.', 'Не так быстро!');
+            }else{
+                toastr.error('Подождите ещё ' + (sleep - Math.floor(Date.now() / 1000)) + ' сек.', 'Не так быстро!');
+                toastr.remove();
+            }
             input.value = '';
-        }else toastr.error('Вы не ввели текст!', 'Запрещено!');
-    }else toastr.error('Нельзя отправлять текст из выключеного поля!', 'Запрещено!');
+        }else{
+            toastr.error('Вы не ввели текст!', 'Запрещено!');
+            toastr.remove();
+        }
+    }else{
+        toastr.error('Нельзя отправлять текст из выключеного поля!', 'Запрещено!');
+        toastr.remove();
+    }
 }
 
 function newChat()
@@ -166,6 +178,7 @@ function newChat()
             {
                 location.href = 'index.php?toast=no_auth';
             }else{
+                toastr.remove();
                 toastr.error(data_parsed.error.message, 'Ошибка!');
             }
             console.log(data_parsed.error.message);
@@ -261,6 +274,7 @@ function autoUpdate()
                 return true;
             }else if (!empty(data_parsed.error))
             {
+                toastr.remove();
                 toastr.error(data_parsed.error.message, 'Ошибка!');
                 return true;
             }else{

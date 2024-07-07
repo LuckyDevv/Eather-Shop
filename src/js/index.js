@@ -3,6 +3,7 @@ function deleteFavorite(acc_id, product_id, element)
     $.post('src/php/handlers/personal_handler.php', {'type': 'delete_favorite', 'acc_id': acc_id, 'product_id': product_id}, function(data){
         const data_parsed = $.parseJSON(data);
         if(empty(data_parsed.error)){
+            toastr.remove();
             toastr.info('Товар удалён из избранного!');
             const id_el = element.getAttribute('id');
             let lines = document.querySelectorAll('#' + id_el);
@@ -12,6 +13,7 @@ function deleteFavorite(acc_id, product_id, element)
                     '</button>';
             }
         }else{
+            toastr.remove();
             toastr.error(data_parsed.error.message, 'Ошибка!');
         }
     });
@@ -21,6 +23,7 @@ function addFavorite(acc_id, product_id, element)
     $.post('src/php/handlers/personal_handler.php', {'type': 'add_favorite', 'acc_id': acc_id, 'product_id': product_id}, function(data){
         const data_parsed = $.parseJSON(data);
         if(empty(data_parsed.error)){
+            toastr.remove();
             toastr.info('Товар добавлен в избранное!');
             const id_el = element.getAttribute('id');
             let lines = document.querySelectorAll('#' + id_el);
@@ -30,6 +33,7 @@ function addFavorite(acc_id, product_id, element)
                     '</button>';
             }
         }else{
+            toastr.remove();
             toastr.error(data_parsed.error.message, 'Ошибка!');
         }
     });
@@ -39,6 +43,7 @@ function deleteCart(acc_id, product_id, element)
     $.post('src/php/handlers/personal_handler.php', {'type': 'delete_cart', 'acc_id': acc_id, 'product_id': product_id}, function(data){
         const data_parsed = $.parseJSON(data);
         if(empty(data_parsed.error)){
+            toastr.remove();
             toastr.info('Товар удалён из корзины!');
             const id_el = element.getAttribute('id');
             let lines = document.querySelectorAll('#' + id_el);
@@ -48,6 +53,7 @@ function deleteCart(acc_id, product_id, element)
                     '</button>'
             }
         }else{
+            toastr.remove();
             toastr.error(data_parsed.error.message, 'Ошибка!');
         }
     });
@@ -57,6 +63,7 @@ function addCart(acc_id, product_id, element)
     $.post('src/php/handlers/personal_handler.php', {'type': 'add_cart', 'acc_id': acc_id, 'product_id': product_id}, function(data){
         const data_parsed = $.parseJSON(data);
         if(empty(data_parsed.error)){
+            toastr.remove();
             toastr.info('Товар добавлен в корзину!');
             const id_el = element.getAttribute('id');
             let lines = document.querySelectorAll('#' + id_el);
@@ -66,6 +73,7 @@ function addCart(acc_id, product_id, element)
                     '</button>';
             }
         }else{
+            toastr.remove();
             toastr.error(data_parsed.error.message, 'Ошибка!');
         }
     });

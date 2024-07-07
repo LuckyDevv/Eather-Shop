@@ -1,10 +1,10 @@
 <?php
 require '../ConfigController.php';
 while (true) {
-    foreach (scandir('sessions') as $session) {
+    foreach (scandir('../sessions') as $session) {
         if ($session !== '.' && $session !== '..') {
             try {
-                $session_config = new ConfigController('sessions/' . $session, ConfigController::JSON);
+                $session_config = new ConfigController('../sessions/' . $session, ConfigController::JSON);
             }catch (Exception $e) {
                 unlink('sessions/' . $session);
                 echo "[LOG] The corrupted session file has been deleted.\nFile name: ".$session."\n\n";
