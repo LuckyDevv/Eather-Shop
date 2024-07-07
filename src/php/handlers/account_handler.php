@@ -130,7 +130,7 @@ if (($_POST['type'] ?? null) == 'set') {
                 }
                 $endSize = 512;
                 $tmp = imagecreatetruecolor($endSize, $endSize);
-                imagecopyresampled($tmp, $src, 0, 0, $offsetX, $offsetY, $endSize, $endSize, 512, 512);
+                imagecopyresampled($tmp, $src, 0, 0, $offsetX, $offsetY, $endSize, $endSize, $square, $square);
                 imageconvolution($tmp, array(
                     array(-1, -1, -1),
                     array(-1, 16, -1),
