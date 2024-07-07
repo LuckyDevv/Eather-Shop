@@ -113,23 +113,25 @@ if (($_POST['type'] ?? null) == 'set') {
                     break;
             }
             if ($typeok) {
-                list($w, $h) = getimagesize($saveto);
-                $max = 524;
-                $tw = $w;
-                $th = $h;
-                if ($w > $h && $max < $w) {
-                    $th = $max / $w * $h;
-                    $tw = $max;
-                } elseif ($h > $w && $max < $h) {
-                    $tw = $max / $h * $w;
-                    $th = $max;
-                } elseif ($max < $w) {
-                    $tw = $th = $max;
+                list($x, $y) = getimagesize($saveto);
+                if ($x > $y) {
+                    $square = $y;
+                    $offsetX = ($x - $y) / 2;
+                    $offsetY = 0;
                 }
-
-                $tmp = imagecreatetruecolor($tw, $th);
-                imagecopyresampled($tmp, $src, 0, 0, 0, 0, $tw, $th, $w, $h);
-                imageconvolution($tmp, array( // Sharpen image
+                elseif ($y > $x) {
+                    $square = $x;
+                    $offsetX = 0;
+                    $offsetY = ($y - $x) / 2;
+                }
+                else {
+                    $square = $x;
+                    $offsetX = $offsetY = 0;
+                }
+                $endSize = 512;
+                $tmp = imagecreatetruecolor($endSize, $endSize);
+                imagecopyresampled($tmp, $src, 0, 0, $offsetX, $offsetY, $endSize, $endSize, 512, 512);
+                imageconvolution($tmp, array(
                     array(-1, -1, -1),
                     array(-1, 16, -1),
                     array(-1, -1, -1)
