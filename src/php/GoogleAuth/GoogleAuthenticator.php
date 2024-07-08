@@ -1,30 +1,16 @@
 <?php
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-
 include_once("FixedByteNotation.php");
-
-
 class GoogleAuthenticator {
-    static $PASS_CODE_LENGTH = 6;
-    static $PIN_MODULO;
-    static $SECRET_LENGTH = 10;
+    static int $PASS_CODE_LENGTH = 6;
+    static int|object|float $PIN_MODULO;
+    static int $SECRET_LENGTH = 10;
     
     public function __construct() {
         self::$PIN_MODULO = pow(10, self::$PASS_CODE_LENGTH);
     }
     
-    public function checkCode($secret,$code) {
+    public function checkCode($secret,$code): bool
+    {
         $time = floor(time() / 30);
         for ( $i = -1; $i <= 1; $i++) {
             
@@ -37,7 +23,8 @@ class GoogleAuthenticator {
         
     }
     
-    public function getCode($secret,$time = null) {
+    public function getCode($secret,$time = null): string
+    {
         
         if (!$time) {
             $time = floor(time() / 30);
@@ -63,16 +50,8 @@ class GoogleAuthenticator {
         return $val2[1];
     }
     
-    public function getUrl($user, $hostname, $secret) {
-        $url =  sprintf("otpauth://totp/%s@%s?secret=%s", $user, $hostname, $secret);
-        $encoder = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
-        $encoderURL = sprintf( "%sotpauth://totp/%s@%s&secret=%s",$encoder, $user, $hostname, $secret);
-        
-        return $encoderURL;
-        
-    }
-    
-    public function generateSecret() {
+    public function generateSecret(): string
+    {
         $secret = "";
         for($i = 1;  $i<= self::$SECRET_LENGTH;$i++) {
             $c = rand(0,255);
