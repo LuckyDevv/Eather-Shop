@@ -20,11 +20,13 @@ $new_products = $products_db->product_get_news();
     <link href="src/toastr/toastr.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="src/css/index.css" rel="stylesheet">
+    <link href="src/css/2fa.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo/logo.png">
     <title>EATHER - интернет-магазин</title>
 </head>
 <body>
 <script src="src/js/jquery.min.js"></script>
+<?php echo $formatter->getTemplate('2fa/2fa-modal-confirm'); ?>
 <?php
 if (is_array($top_products)){
     $top_products = $formatter->get_products($_COOKIE, 'Лидеры продаж!', $top_products, 5);
@@ -54,6 +56,7 @@ if ($new_products == '</div>' && $top_products == '</div>') {
 ?>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/index.js"></script>
+<script src="src/js/bootstrap.min.js"></script>
 <script src="src/js/main.js"></script>
 <?php
 if (isset($_GET['toast']))
@@ -68,6 +71,5 @@ if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
 }
 ?>
 <?php echo $formatter->get_header_script(); ?>
-<script src="src/js/bootstrap.min.js"></script>
 </body>
 </html>

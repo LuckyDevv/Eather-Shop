@@ -18,6 +18,7 @@ $acc_id = $formatter->get_cookie_acc_id($_COOKIE);
     <link href="src/icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="src/css/index.css" rel="stylesheet">
     <link href="src/toastr/toastr.css" rel="stylesheet">
+    <link href="src/css/2fa.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo/logo.png">
     <title>Результаты поиска - EATHER</title>
 </head>
@@ -38,8 +39,9 @@ $acc_id = $formatter->get_cookie_acc_id($_COOKIE);
 <script src="src/js/jquery.min.js"></script>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/index.js"></script>
-<script src="src/js/main.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
+<script src="src/js/main.js"></script>
+<?php echo $formatter->getTemplate('2fa/2fa-modal-confirm'); ?>
 <?php echo $formatter->get_header_script();
 if($find_name !== false) {
     echo "

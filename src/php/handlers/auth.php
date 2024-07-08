@@ -82,13 +82,71 @@ switch ($post)
             {
                 if ($accounts_db->account_exists_login($login))
                 {
-                    $hash_password = hash('sha256', $password);
-                    if ($accounts_db->account_auth($login, $hash_password, $_SERVER['REMOTE_ADDR']))
+                    $acc_id = (int) $accounts_db->account_get_by_login($login);
+                    if ($acc_id !== 0)
                     {
-                        createSession($login, $hash_password);
-                    }else error('Не удалось провести авторизацию!', 4);
+                        $hash_password = hash('sha256', $password);
+                        if ($accounts_db->two_fa_enabled($acc_id))
+                        {
+                            if ($accounts_db->password_get($acc_id) == $hash_password) {
+                                response('2fa');
+                            }else error('Неверный пароль!', 11);
+                        }else{
+                            if ($accounts_db->password_get($acc_id) == $hash_password)
+                            {
+                                if ($accounts_db->account_auth($login, $hash_password, $_SERVER['REMOTE_ADDR']))
+                                {
+                                    createSession($login, $hash_password);
+                                }else error('Не удалось провести авторизацию!', 4);
+                            }else error('Неверный пароль!', 11);
+                        }
+                    }else error('Аккаунта с таким логином не существует!', 5);
                 }else error('Аккаунта с таким логином не существует!', 2);
             }else error('Логин может состоять только из английских букв и цифр!', 1);
         }else error('Не введены все значения!', 0);
         break;
+    case '2fa_auth':
+        $login = $_POST['login'] ?? ''; $login = strtolower($login); $login = $login !== '' ? $login : null;
+        $code = $_POST['code'] ?? ''; $code = strtolower($code); $code = $code !== '' ? $code : null;
+        $password = $_POST['password'] ?? null; $password = $password !== '' ? $password : null;
+        if ($login !== null && $password !== null)
+        {
+            if(preg_match('|^[A-Z0-9]+$|i', $login))
+            {
+                if ($accounts_db->account_exists_login($login))
+                {
+                    $acc_id = (int) $accounts_db->account_get_by_login($login);
+                    if ($acc_id !== 0)
+                    {
+                        $hash_password = hash('sha256', $password);
+                        if ($accounts_db->two_fa_enabled($acc_id))
+                        {
+                            require '../GoogleAuth/GoogleAuthenticator.php';
+                            $ga = new GoogleAuthenticator();
+                            $secret_code = $accounts_db->two_fa_get_code($acc_id);
+                            if ($secret_code !== false)
+                            {
+                                if ($ga->checkCode($secret_code, $code))
+                                {
+                                    if ($accounts_db->password_get($acc_id) == $hash_password) {
+                                        if ($accounts_db->account_auth($login, $hash_password, $_SERVER['REMOTE_ADDR']))
+                                        {
+                                            createSession($login, $hash_password);
+                                        }else error('Не удалось провести авторизацию!', 4);
+                                    }else error('Неверный пароль!', 11);
+                                }else error('Неверный код!', 8);
+                            }else error('Не найден Secret Code!', 9);
+                        }else{
+                            if ($accounts_db->password_get($acc_id) == $hash_password)
+                            {
+                                if ($accounts_db->account_auth($login, $hash_password, $_SERVER['REMOTE_ADDR']))
+                                {
+                                    createSession($login, $hash_password);
+                                }else error('Не удалось провести авторизацию!', 4);
+                            }else error('Неверный пароль!', 11);
+                        }
+                    }else error('Аккаунта с таким логином не существует!', 5);
+                }else error('Аккаунта с таким логином не существует!', 2);
+            }else error('Логин может состоять только из английских букв и цифр!', 1);
+        }else error('Не введены все значения!', 0);
 }

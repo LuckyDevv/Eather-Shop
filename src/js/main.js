@@ -1,5 +1,6 @@
 var change = false;
 var no_auth = false;
+var login = null; var password = null;
 toastr.options = {
     "closeButton": true,
     "debug": false,
@@ -183,28 +184,40 @@ function eye_Reg() {
 function authButton(){
     if(empty(getCookie('sess_id')))
     {
-        var login = $('#login_input').val();
-        var password = $('#password_input').val();
-        if(empty(login)){
+        var login_ = $('#login_input').val();
+        var password_ = $('#password_input').val();
+        if(empty(login_)){
             toastr.remove();
             toastr.error('Вы не ввели логин!', 'Ошибка!')
             return true;
         }
-        if(empty(password)){
+        if(empty(password_)){
             toastr.remove();
             toastr.error('Вы не ввели пароль!', 'Ошибка!')
             return true;
         }
-        if(!empty(login) && !empty(password)) {
-            $.post('src/php/handlers/auth.php', {'type': 'auth', 'login': login, 'password': password}, function(data){
+        if(!empty(login_) && !empty(password_)) {
+            login = login_;
+            password = password_;
+            $.post('src/php/handlers/auth.php', {'type': 'auth', 'login': login_, 'password': password_}, function(data){
                 var data_parsed = $.parseJSON(data);
-                if(empty(data_parsed.error)){
-                    toastr.remove();
-                    toastr.success('Вы успешно авторизовались!', 'Успех!');
-                    document.cookie = "sess_id=" + data_parsed.response;
-                    $('.btn-close')?.click();
-                    document.getElementById('authModal')?.remove();
-                    document.getElementById('regModal')?.remove();
+                if(!empty(data_parsed.response)){
+                    if (data_parsed.response === '2fa')
+                    {
+                        $('#regModal').modal('hide');
+                        $('#authModal').modal('hide');
+                        $('#2faModalConfirm').modal('show');
+                    }else{
+                        toastr.remove();
+                        toastr.success('Вы успешно авторизовались!', 'Успех!');
+                        document.cookie = "sess_id=" + data_parsed.response;
+                        $('.btn-close')?.click();
+                        document.getElementById('authModal')?.remove();
+                        document.getElementById('regModal')?.remove();
+                        setTimeout(function (){
+                            location.reload();
+                        }, 900);
+                    }
                 }else{
                     toastr.remove();
                     toastr.error(data_parsed.error.message, 'Ошибка!');
@@ -219,6 +232,51 @@ function authButton(){
         toastr.remove();
     }
 }
+
+$('#two_fa_submit_confirm').click(function (){
+    let num1_confirm = document.getElementById('2fa_num1_confirm');
+    let num2_confirm = document.getElementById('2fa_num2_confirm');
+    let num3_confirm = document.getElementById('2fa_num3_confirm');
+    let num4_confirm = document.getElementById('2fa_num4_confirm');
+    let num5_confirm = document.getElementById('2fa_num5_confirm');
+    let num6_confirm = document.getElementById('2fa_num6_confirm');
+    if (
+        !empty(num1_confirm) && !empty(num2_confirm) && !empty(num3_confirm) && !empty(num4_confirm) && !empty(num5_confirm)
+        && !empty(num6_confirm) && !empty(num1_confirm.value) && !empty(num2_confirm.value) && !empty(num3_confirm.value)
+        && !empty(num4_confirm.value) && !empty(num5_confirm.value) && !empty(num6_confirm.value)
+        && !empty(password) && !empty(login)
+    )
+    {
+        let confirm_code = '' + num1_confirm.value + num2_confirm.value + num3_confirm.value + num4_confirm.value + num5_confirm.value + num6_confirm.value + '';
+        $.post('src/php/handlers/auth.php', {'type': '2fa_auth', 'login': login, 'password': password, 'code': confirm_code},
+            function (data){
+                const data_parsed = $.parseJSON(data);
+                if (!empty(data_parsed.response))
+                {
+                    toastr.remove();
+                    toastr.success('Вы успешно авторизовались!', 'Успех!');
+                    document.cookie = "sess_id=" + data_parsed.response;
+                    $('.btn-close')?.click();
+                    document.getElementById('authModal')?.remove();
+                    document.getElementById('regModal')?.remove();
+                    setTimeout(function (){
+                        location.reload();
+                    }, 900);
+                    return true;
+                }
+                if (!empty(data_parsed.error))
+                {
+                    toastr.remove();
+                    toastr.error(data_parsed.error.message, 'Ошибка!');
+                    return true;
+                }
+            });
+    }else{
+        toastr.remove();
+        toastr.error('Ошибка!', 'Не введён код!');
+    }
+});
+
 function regButton(){
     if(empty(getCookie('sess_id')))
     {
@@ -350,3 +408,56 @@ function update_personal_button()
 }
 
 window.onresize = reportWindowSize;
+
+// OTP
+const inputs_confirm = document.querySelectorAll(".otp-input-confirm");
+const button_confirm = document.querySelector("#two_fa_submit_confirm");
+window.addEventListener("load", () => inputs_confirm[0].focus());
+button_confirm.setAttribute("disabled", "disabled");
+inputs_confirm[0].addEventListener("paste", function (event) {
+    event.preventDefault();
+    const pastedValue = (event.clipboardData || window.clipboardData).getData("text");
+    const otpLength = inputs_confirm.length;
+    for (let i = 0; i < otpLength; i++) {
+        if (i < pastedValue.length) {
+            inputs_confirm[i].value = pastedValue[i];
+            inputs_confirm[i].removeAttribute("disabled");
+            inputs_confirm[i].focus;
+        } else {
+            inputs_confirm[i].value = ""; // Clear any remaining inputs
+            inputs_confirm[i].focus;
+        }
+    }
+});
+inputs_confirm.forEach((input, index1) => {
+    input.addEventListener("keyup", (e) => {
+        const currentInput = input;
+        const nextInput = input.nextElementSibling;
+        const prevInput = input.previousElementSibling;
+        if (currentInput.value.length > 1) {
+            currentInput.value = "";
+            return;
+        }
+        if (nextInput && nextInput.hasAttribute("disabled") && currentInput.value !== "") {
+            nextInput.removeAttribute("disabled");
+            nextInput.focus();
+        }
+        if (e.key === "Backspace") {
+            inputs_confirm.forEach((input, index2) => {
+                if (index1 <= index2 && prevInput) {
+                    input.setAttribute("disabled", true);
+                    input.value = "";
+                    prevInput.focus();
+                }
+            });
+        }
+        button_confirm.classList.remove("active");
+        button_confirm.setAttribute("disabled", "disabled");
+        const inputsNo = inputs_confirm.length;
+        if (!inputs_confirm[inputsNo - 1].disabled && inputs_confirm[inputsNo - 1].value !== "") {
+            button_confirm.classList.add("active");
+            button_confirm.removeAttribute("disabled");
+            return null;
+        }
+    });
+});

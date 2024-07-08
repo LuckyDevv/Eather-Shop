@@ -1,5 +1,6 @@
 <?php
 require '../ConfigController.php';
+require '../database/AccountsDB.php';
 while (true) {
     foreach (scandir('../sessions') as $session) {
         if ($session !== '.' && $session !== '..') {
@@ -17,7 +18,37 @@ while (true) {
                 unlink('sessions/' . $session);
                 echo "[LOG] The outdated session file has been deleted: ".$login."\nFile name: ".$session."\n\n";
             }
+            unset($timeout);
+            unset($login);
         }
     }
+
+    $temp_dir = scandir('temp');
+    foreach ($temp_dir as $secret) {
+        if ($secret == '.' || $secret == '..') {
+            $index = array_search($secret, $temp_dir);
+            if ($index !== false && isset($temp_dir[$index]))
+            {
+                unset($temp_dir[$index]);
+            }
+        }
+    }
+    if (count($temp_dir) > 0)
+    {
+        $secrets = (new AccountsDB())->two_fa_get_all_secrets();
+        if ($secrets !== false)
+        {
+            foreach ($temp_dir as $secret)
+            {
+                if (!in_array($secret, $secrets))
+                {
+                    unlink('temp/'.$secret);
+                }
+            }
+        }
+        unset($secrets);
+    }
+    unset($temp_dir);
+
     sleep(3600);
 }

@@ -33,15 +33,15 @@
                     </div>
                 </form>
                 <button id="view-pass" class="btn btn-primary" type="button" style="width: 100%; margin: 5px auto auto;">Показать пароль</button>
+                <div class="col-md-12">
+                    %2fa%
+                </div>
                 <!--<div class="row mt-3">
                     <div class="col-md-12">
                         <label class="labels">Адрес</label>
                         <input type="text" class="form-control" placeholder="Введите адрес..." value="">
                     </div>
-                    <div class="col-md-12">
-                        <label class="labels">Почта</label>
-                        <input type="email" class="form-control" placeholder="Введите почту..." value="">
-                    </div>
+
                     <div class="col-md-12">
                         <label class="labels">Education</label>
                         <input type="text" class="form-control" placeholder="education" value="">

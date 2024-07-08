@@ -13,6 +13,7 @@ class AccountsDB
             $this->db->query("CREATE TABLE IF NOT EXISTS accounts (acc_id BIGINT, acc_login TEXT NOT NULL, user_name TEXT, avatar TEXT, password TEXT, devices TEXT, PRIMARY KEY (acc_id));");
             $this->db->query("CREATE TABLE IF NOT EXISTS accounts_vk (acc_id BIGINT, vk_id BIGINT, PRIMARY KEY (acc_id, vk_id));");
             $this->db->query("CREATE TABLE IF NOT EXISTS accounts_tg (acc_id BIGINT, tg_id BIGINT, PRIMARY KEY (acc_id, tg_id));");
+            $this->db->query("CREATE TABLE IF NOT EXISTS 2fa (acc_id BIGINT, 2fa_isEnabled BOOLEAN, 2fa_secret TEXT, PRIMARY KEY (acc_id));");
         }catch (mysqli_sql_exception $exception) {
             echo (new ErrorManager())->getExceptionLog($exception, 'AccountsDB');
             die();
@@ -127,11 +128,7 @@ class AccountsDB
         $request = $this->db->query("SELECT * FROM accounts WHERE acc_id = '$acc_id';");
         if ($request !== false)
         {
-            $fetched = $request->fetch_all(MYSQLI_ASSOC);
-            if (count($fetched) === 1)
-            {
-                return $fetched[0]['devices'];
-            }
+            return $request->fetch_all(MYSQLI_ASSOC)[0]['devices'];
         }
         return false;
     }
@@ -140,8 +137,7 @@ class AccountsDB
         $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
         if ($request instanceof mysqli_result)
         {
-            $fetched = $request->fetch_all(MYSQLI_ASSOC);
-            return $fetched[0]['acc_login'];
+            return $request->fetch_all(MYSQLI_ASSOC)[0]['acc_login'];
         }
         return false;
     }
@@ -151,8 +147,7 @@ class AccountsDB
         if ($get !== false && $new_login !== $get)
         {
             $new_login = mb_strtolower($new_login, 'utf-8');
-            $result = $this->db->query("UPDATE accounts SET acc_login = '$new_login' WHERE acc_id=$acc_id;");
-            if ($result !== false) return true;
+            if ($result = $this->db->query("UPDATE accounts SET acc_login = '$new_login' WHERE acc_id=$acc_id;") !== false) return true;
         }
         return false;
     }
@@ -161,8 +156,7 @@ class AccountsDB
         $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
         if ($request instanceof mysqli_result)
         {
-            $fetched = $request->fetch_all(MYSQLI_ASSOC);
-            return $fetched[0]['user_name'];
+            return $request->fetch_all(MYSQLI_ASSOC)[0]['user_name'];
         }
         return false;
     }
@@ -171,8 +165,7 @@ class AccountsDB
         $get = $this->avatar_get($acc_id);
         if ($get !== false && $new_name !== $get)
         {
-            $result = $this->db->query("UPDATE accounts SET user_name = '$new_name' WHERE acc_id=$acc_id;");
-            if ($result !== false) return true;
+            if ($this->db->query("UPDATE accounts SET user_name = '$new_name' WHERE acc_id=$acc_id;") !== false) return true;
         }
         return false;
     }
@@ -181,8 +174,7 @@ class AccountsDB
         $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
         if ($request instanceof mysqli_result)
         {
-            $fetched = $request->fetch_all(MYSQLI_ASSOC);
-            return $fetched[0]['avatar'];
+            return $request->fetch_all(MYSQLI_ASSOC)[0]['avatar'];
         }
         return false;
     }
@@ -191,8 +183,7 @@ class AccountsDB
         $get = $this->avatar_get($acc_id);
         if ($get !== false)
         {
-            $result = $this->db->query("UPDATE accounts SET avatar = '$new_avatar' WHERE acc_id=$acc_id;");
-            if ($result !== false) return true;
+            if ($this->db->query("UPDATE accounts SET avatar = '$new_avatar' WHERE acc_id=$acc_id;") !== false) return true;
         }
         return false;
     }
@@ -202,8 +193,7 @@ class AccountsDB
         $request = $this->db->query("SELECT * FROM accounts WHERE acc_id=$acc_id;");
         if ($request instanceof mysqli_result)
         {
-            $fetched = $request->fetch_all(MYSQLI_ASSOC);
-            return $fetched[0]['password'];
+            return $request->fetch_all(MYSQLI_ASSOC)[0]['password'];
         }
         return false;
     }
@@ -212,8 +202,60 @@ class AccountsDB
         $get = $this->password_get($acc_id);
         if ($get !== false && $new_password !== $get)
         {
-            $result = $this->db->query("UPDATE accounts SET password = '$new_password' WHERE acc_id=$acc_id;");
-            if ($result !== false) return true;
+            if ($this->db->query("UPDATE accounts SET password = '$new_password' WHERE acc_id=$acc_id;") !== false) return true;
+        }
+        return false;
+    }
+
+    public function two_fa_enabled(int $acc_id)
+    {
+        $request = $this->db->query("SELECT * FROM 2fa WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result)
+        {
+            $fetch = $request->fetch_all(MYSQLI_ASSOC);
+            if (count($fetch) > 0)
+            {
+                return $fetch[0]['2fa_isEnabled'];
+            }
+        }
+        return false;
+    }
+    public function two_fa_delete(int $acc_id): bool
+    {
+        try {
+            if ($this->db->query("DELETE FROM 2fa WHERE `acc_id`=$acc_id;") !== false) return true;
+        }catch(mysqli_sql_exception $e)
+        {
+            (new ErrorManager())->getExceptionLog($e, 'AccountsDB');
+        }
+        return false;
+    }
+    public function two_fa_set(int $acc_id, bool $is_enabled, string $secret_code = ''): bool
+    {
+        try {
+            $request = $this->db->query("INSERT IGNORE INTO 2fa (`acc_id`, `2fa_isEnabled`, `2fa_secret`) VALUES ($acc_id, $is_enabled, '$secret_code')");
+            if ($request !== false) return true;
+        }catch(mysqli_sql_exception $e)
+        {
+            (new ErrorManager())->getExceptionLog($e, 'AccountsDB');
+        }
+        return false;
+    }
+    public function two_fa_get_code(int $acc_id): false|string
+    {
+        $request = $this->db->query("SELECT * FROM 2fa WHERE acc_id=$acc_id;");
+        if ($request instanceof mysqli_result)
+        {
+            return $request->fetch_all(MYSQLI_ASSOC)[0]['2fa_secret'] ?? 'none';
+        }
+        return false;
+    }
+    public function two_fa_get_all_secrets(): array|false
+    {
+        $request = $this->db->query("SELECT 2fa_secret FROM 2fa;");
+        if ($request instanceof mysqli_result)
+        {
+            return $request->fetch_all(MYSQLI_ASSOC);
         }
         return false;
     }

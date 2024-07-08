@@ -1,58 +1,38 @@
 # Eather-Shop | [Demo](http://185.117.152.16/index.php)
-### EN: An online store project created in pure PHP, JS, HTML, CSS. MySQL was used as the database. You can see the old update here: [Click](https://github.com/LuckyDevv/Eather-Shop/blob/main/Update_0_2_0.md) 
+### EN: An online store project created in pure PHP, JS, HTML, CSS. MySQL was used as the database. You can see the old update here: [Click](https://github.com/LuckyDevv/Eather-Shop/blob/main/markdown/Update_0_2_1.md) 
 
-### RU: Проект интернет-магазина, созданный на чистом PHP, JS, HTML, CSS. В качестве базы данных использовалась MySQL. Старое обновление вы можете увидеть тут: [Клик](https://github.com/LuckyDevv/Eather-Shop/blob/main/Update_0_2_0.md)
+### RU: Проект интернет-магазина, созданный на чистом PHP, JS, HTML, CSS. В качестве базы данных использовалась MySQL. Старое обновление вы можете увидеть тут: [Клик](https://github.com/LuckyDevv/Eather-Shop/blob/main/markdown/Update_0_2_1.md)
 
-# Update 0.2.1 (EN):
-#### Hello again! Update 0.2.1 has been released. This update is not a release version; the project will be in development until August 31, 2024. Deadlines may vary depending on the scope of work.
+# Update 0.2.2 (EN):
+#### Hello! Update 0.2.2 has been released. This update is not a release version; the project will be in development until August 31, 2024. Deadlines may vary depending on the scope of work.
 
-#### In this update, a large number of errors were worked out, and an innovation was added - account management.
-#### You can access the account management page by clicking the "Profile" button
-#### In account management you can:
+#### In this update, many bugs were worked out, and an innovation was added - two-factor authentication.
 
-1. Change your profile photo
+To manage its settings, you need to go to account management (Profile page).
 
-2. Change display name
+When you want to enable two-factor authentication, you need to scan the QR code, or enter the code manually in the authenticator app. After this, you will need to enter a code to confirm the binding.
 
-3. Change account login
+If you have two-factor authentication enabled, you will be asked to enter the code from the authenticator app when you sign in.
 
-4. Change password
+#### Tested on Google Authenticator and Microsoft Authenticator. I do not know how other applications will work, and I am not responsible for errors when working with them.
 
-5. Find out account ID and wallet ID
+#### You will be able to see installation instructions and detailed documentation after the final release version.
 
-6. See the list of authorized devices (unfinished)
+#### If bugs are found in update 0.2.2, they will be fixed in a commit with the same name with the postscript "fix"
 
-7. End all sessions (TODO)
+# Обновление 0.2.2 (RU):
+#### Привет! Вышло обновление 0.2.2. Данное обновление не является релизной версией, проект будет в разработке предположительно до 31.08.2024. Сроки могут изменяться в зависимости от объема работ.
 
-8. Log out of your account
+#### В данном обновлении было проработано много ошибок, а также добавлено нововведение - двухфакторная аутентификация.
 
-#### You can see the full list of changes and installation instructions later on this page. At the moment, they are not ready.
+Чтобы управлять её настройками, вам нужно перейти в управление аккаунтом (страница "Профиль").
 
-#### If bugs are found in update 0.2.1, they will be fixed in a commit with the same name with the postscript "fix"
+Когда вы хотите включить двухфакторную аутентификацию, вам нужно отсканировать QR-код, или ввести код вручную в приложении-аутентификаторе. После этого, вам потребуется ввести код для подтверждения привязки.
 
-# Обновление 0.2.1 (RU):
-#### Снова привет! Вышло обновление 0.2.1. Данное обновление не является релизной версией, проект будет в разработке предположительно до 31.08.2024 года. Сроки могут изменяться в зависимости от объема работ.
+Если у вас включена двухфакторная аутентификация, при входе вам потребуется ввести код из приложения-аутентификатора.
 
-#### В данном обновлении было проработано большое количество ошибок, а также добавлено нововведение - управление аккаунтом.
-#### На страницу управления аккаунтом можно попасть по нажатии кнопки "Профиль"
-#### В управлении аккаунтом вы можете:
+#### Протестировано на Google Authenticator и Microsoft Authenticator. Я не знаю как будут работать другие приложения и не несу ответственность за ошибки при работе с ними.
 
-1. Изменить фото профиля
+#### Инструкцию по установке и подробную документацию вы сможете увидеть после финальной релизной версии.
 
-2. Изменить отображаемое имя
-
-3. Изменить логин учётной записи
-
-4. Изменить пароль
-
-5. Узнать ID аккаунта и ID кошелька
-
-6. Увидеть список авторизованных устройств (недоработано)
-
-7. Завершить все сеансы (TODO)
-
-8. Выйти из аккаунта
-
-#### Полный список изменений, а также инструкцию по установке вы сможете увидеть позже на этой странице. На данный момент, они не готовы.
-
-#### Если будут найдены баги в обновлении 0.2.1, они будут устранены в коммите с таким же названием с припиской "fix"
+#### Если будут найдены баги в обновлении 0.2.2, они будут устранены в коммите с таким же названием с припиской "fix"

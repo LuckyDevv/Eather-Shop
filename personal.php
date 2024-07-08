@@ -28,10 +28,12 @@ function quit(): void
     <link href="src/icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="src/css/personal.css" rel="stylesheet">
     <link href="src/toastr/toastr.css" rel="stylesheet">
+    <link href="src/css/2fa.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo/logo.png">
     <title>EATHER - Личный кабинет</title>
 </head>
 <body>
+<?php echo $formatter->getTemplate('2fa/2fa-modal-confirm'); ?>
 <?php
 if (isset($_COOKIE['sess_id']))
 {
@@ -49,11 +51,18 @@ if (isset($acc_id))
     foreach (explode(',', $accounts_db->devices_get($acc_id)) as $device) {
         $devices .= $device.'<br>';
     }
+    if($accounts_db->two_fa_enabled($acc_id))
+    {
+        $two_fa = $formatter->getTemplate('2fa/2fa-enabled');
+    }else{
+        $two_fa = $formatter->getTemplate('2fa/2fa-disabled');
+    }
 
     echo str_replace(array(
         '%avatar%',
         '%username%',
         '%login%',
+        '%2fa%',
         '%account_id%',
         '%wallet_id%',
         '%devices%'
@@ -61,6 +70,7 @@ if (isset($acc_id))
         $accounts_db->avatar_get($acc_id),
         $accounts_db->name_get($acc_id),
         $accounts_db->login_get($acc_id),
+        $two_fa,
         $acc_id,
         $personal_db->get_wallet_id($acc_id),
         rtrim($devices, '<br>')
@@ -90,12 +100,17 @@ if (isset($acc_id))
     </div>
 </div>
 
+<?php
+echo $formatter->getTemplate('2fa/2fa-modal');
+echo $formatter->getTemplate('2fa/2fa-modal-next');
+?>
+
 <script src="src/js/jquery.min.js"></script>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/index.js"></script>
 <script src="src/js/personal.js"></script>
-<script src="src/js/main.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
+<script src="src/js/main.js"></script>
 <?php echo $formatter->get_header_script();
 if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
     echo '<script>change = true;</script>';

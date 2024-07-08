@@ -28,6 +28,7 @@ if(is_numeric($product_id)) {
     <link href="src/css/product.css" rel="stylesheet">
     <link href="src/css/gallery.css" rel="stylesheet">
     <link href="src/toastr/toastr.css" rel="stylesheet">
+    <link href="src/css/2fa.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo/logo.png">
     <?php
     if($find)
@@ -39,6 +40,7 @@ if(is_numeric($product_id)) {
     ?>
 </head>
 <body>
+<?php echo $formatter->getTemplate('2fa/2fa-modal-confirm'); ?>
 <div class="container-fluid margin-custom">
     <div class="row p-1 justify-content-center">
     <?php
@@ -162,9 +164,9 @@ if(is_numeric($product_id)) {
 <script src="src/js/jquery.min.js"></script>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/product.js"></script>
+<script src="src/js/bootstrap.min.js"></script>
 <script src="src/js/main.js"></script>
 <script src="src/js/gallery.js"></script>
-<script src="src/js/bootstrap.min.js"></script>
 <?php echo $formatter->get_header_script();
 if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
     echo '<script>change = true;</script>';

@@ -23,15 +23,17 @@ if(!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR']))
     <link href="src/toastr/toastr.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="logo/logo.png">
+    <link href="src/css/2fa.css" rel="stylesheet">
     <title>EATHER - интернет-магазин</title>
 </head>
 <body>
+<?php echo $formatter->getTemplate('2fa/2fa-modal-confirm'); ?>
 <?php echo $formatter->getTemplate('chat/main'); ?>
 <script src="src/js/jquery.min.js"></script>
 <script src="src/toastr/toastr.js"></script>
 <script src="src/js/support.js"></script>
-<script src="src/js/main.js"></script>
 <script src="src/js/bootstrap.min.js"></script>
+<script src="src/js/main.js"></script>
 <?php echo $formatter->get_header_script();
 if (!$formatter->get_cookie_auth($_COOKIE, $_SERVER['REMOTE_ADDR'])) {
     echo '<script>change = true;</script>';
