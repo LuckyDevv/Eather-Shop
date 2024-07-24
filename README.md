@@ -3,8 +3,8 @@
 
 ### RU: Проект интернет-магазина, созданный на чистом PHP, JS, HTML, CSS. В качестве базы данных использовалась MySQL. Старое обновление вы можете увидеть тут: [Клик](https://github.com/LuckyDevv/Eather-Shop/blob/main/markdown/Update_0_2_1.md)
 
-## (EN) Demo site version - 0.2.1. Update 0.2.2 will be uploaded later!
-## (RU) Версия демо-сайта - 0.2.1. Обновление 0.2.2 будет загружено позже!
+## (EN) Demo site version - 0.2.1. Update 0.2.2 will not be downloaded to the servers! Wait for update 0.2.3.
+## (RU) Версия демо-сайта - 0.2.1. Обновление 0.2.2 не будет загружено на сервера! Ждите обновление 0.2.3.
 
 # Update 0.2.2 (EN):
 #### Hello! Update 0.2.2 has been released. This update is not a release version; the project will be in development until August 31, 2024. Deadlines may vary depending on the scope of work.
